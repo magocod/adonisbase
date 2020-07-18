@@ -5,12 +5,12 @@
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 /**
- * Resourceful controller for interacting with permissions
+ * Resourceful controller for interacting with users
  */
-class PermissionController {
+class UserController {
   /**
-   * Show a list of all permissions.
-   * GET permissions
+   * Show a list of all users.
+   * GET users
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -21,8 +21,8 @@ class PermissionController {
   }
 
   /**
-   * Render a form to be used for creating a new permission.
-   * GET permissions/create
+   * Render a form to be used for creating a new user.
+   * GET users/create
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -33,8 +33,8 @@ class PermissionController {
   }
 
   /**
-   * Create/save a new permission.
-   * POST permissions
+   * Create/save a new user.
+   * POST users
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -44,8 +44,8 @@ class PermissionController {
   }
 
   /**
-   * Display a single permission.
-   * GET permissions/:id
+   * Display a single user.
+   * GET users/:id
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -56,8 +56,8 @@ class PermissionController {
   }
 
   /**
-   * Render a form to update an existing permission.
-   * GET permissions/:id/edit
+   * Render a form to update an existing user.
+   * GET users/:id/edit
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -68,8 +68,8 @@ class PermissionController {
   }
 
   /**
-   * Update permission details.
-   * PUT or PATCH permissions/:id
+   * Update user details.
+   * PUT or PATCH users/:id
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -79,8 +79,8 @@ class PermissionController {
   }
 
   /**
-   * Delete a permission with id.
-   * DELETE permissions/:id
+   * Delete a user with id.
+   * DELETE users/:id
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -90,4 +90,4 @@ class PermissionController {
   }
 }
 
-module.exports = PermissionController
+module.exports = UserController

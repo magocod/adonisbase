@@ -19,3 +19,7 @@ const Route = use('Route')
 Route.get('/', () => {
   return { greeting: 'Hello world in JSON' }
 })
+
+Route.group(() => {
+  Route.get('', 'auth/RoleController.index');
+}).prefix('api/roles');

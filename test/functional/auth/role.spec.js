@@ -1,8 +1,18 @@
 'use strict'
 
 const { test, trait } = use('Test/Suite')('Role')
-trait('Test/Browser')
+trait('Test/ApiClient')
 
-test('make sure 2 + 2 is 4', async ({ assert }) => {
-  assert.equal(2 + 2, 4)
+const Role = use('Adonis/Acl/Role');
+
+test('Get all roles, route: GET (roles), success', async ({ client }) => {
+
+  const roles = await Role.all()
+  const response = await client.get('/api/roles').end();
+
+  response.assertStatus(200);
+  response.assertJSONSubset({
+  	data: roles.toJSON()
+  })
+
 })
