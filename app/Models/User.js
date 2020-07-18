@@ -32,6 +32,10 @@ class User extends Model {
     ]
   }
 
+  static scopeHasProfile(query) {
+    return query.with('roles').with('permissions');
+  }
+
   /**
    * A relationship on tokens is required for auth to
    * work. Since features like `refreshTokens` or

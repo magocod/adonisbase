@@ -21,5 +21,9 @@ Route.get('/', () => {
 })
 
 Route.group(() => {
+  Route.post('login', 'auth/AuthController.login');
+}).prefix('api/auth');
+
+Route.group(() => {
   Route.get('', 'auth/RoleController.index');
 }).prefix('api/roles');

@@ -20,7 +20,10 @@ class RoleController {
   async index ({ response }) {
     try {
       const roles = await Role.all()
-      return response.status(200).send({ data: roles });
+      return response.status(200).json({
+        message: 'Operacion exitosa',
+        data: roles
+      });
     } catch (error) {
       return response.status(error.status == undefined ? 400 : error.status).json({
         error: {
