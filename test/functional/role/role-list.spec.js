@@ -1,6 +1,6 @@
 'use strict'
 
-const { test, trait } = use('Test/Suite')('Role')
+const { test, trait } = use('Test/Suite')('Role List, auth/RoleController')
 trait('Test/ApiClient')
 
 const Role = use('Adonis/Acl/Role');

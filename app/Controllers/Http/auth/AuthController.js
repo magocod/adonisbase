@@ -24,7 +24,9 @@ class AuthController {
             const validation = await validate(request.all(), rules, messages);
 
             if (validation.fails()) {
-                return response.status(422).send({ error: validation.messages() });
+                return response.status(422).send({
+                    error: validation.messages()
+                });
             }
 
             const { email, password } = request.all();
@@ -32,11 +34,19 @@ class AuthController {
             const user = await User.findByOrFail('email', email);
 
             if (user === null) {
-                return response.status(401).json({ message: 'No se encuentran Registros' });
+                return response.status(404).json({
+                    message: 'Usuario no existe',
+                    details: "",
+                    err_message: ""
+                });
             }
 
             if (user.status === false) {
-                return response.status(403).json({ message: 'No puedes ingresar en este momentos, porfavor valida tu cuenta' });
+                return response.status(403).json({
+                    message: 'No puedes ingresar en este momentos, porfavor valida tu cuenta',
+                    details: "",
+                    err_message: ""
+                });
             }
 
             const tokenData = await auth.attempt(email, password)
@@ -60,13 +70,18 @@ class AuthController {
             });
 
         } catch (error) {
-            console.log(error);
-            return response.status(error.status == undefined ? 400 : error.status).json({
-                error: {
-                    message: "Autenticacion fallida",
-                    err_message: error.message
-                }
-            });
+            // console.log(error);
+            const errorMessage = {
+                message: "Autenticacion fallida",
+                details: "",
+                err_message: error.message
+            };
+            if (error.status === 404) {
+                errorMessage.details = 'Usuario no existe';
+            }
+            return response.status(
+                error.status === undefined ? 400 : error.status
+            ).json(errorMessage);
         }
     }
 

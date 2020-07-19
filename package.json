@@ -28,7 +28,8 @@
     "@adonisjs/vow": "^1.0.17",
     "adonis-acl": "^1.1.1",
     "mysql": "^2.18.1",
-    "mysql2": "^2.1.0"
+    "mysql2": "^2.1.0",
+    "sqlite3": "^5.0.0"
   },
   "devDependencies": {},
   "autoload": {

@@ -25,9 +25,10 @@ class RoleController {
         data: roles
       });
     } catch (error) {
-      return response.status(error.status == undefined ? 400 : error.status).json({
+      return response.status(error.status === undefined ? 400 : error.status).json({
         error: {
           message: "Error cargando roles",
+          details: "",
           err_message: error.message
         }
       });

@@ -59,6 +59,9 @@ const aliases = {}
 | Here you store ace commands for your package
 |
 */
-const commands = []
+const commands = [
+  // functional tests
+  'App/Commands/TestUser',
+]
 
 module.exports = { providers, aceProviders, aliases, commands }
