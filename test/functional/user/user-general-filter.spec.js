@@ -1,0 +1,234 @@
+'use strict'
+
+const { test, trait } = use('Test/Suite')('User General Filter, auth/UserController.indexFilter')
+trait('Test/ApiClient')
+
+const User = use('App/Models/User');
+const { validateAll } = use("Validator");
+
+test('Returns everything if it does not receive parameters, route: GET /api/user/filter/:page', async ({ client }) => {
+
+  const pagination = {
+    page: 1,
+    per_page: 5,
+  };
+
+  const request = {};
+
+  const users = await User
+  .query()
+  .hasProfile()
+  .paginate(pagination.page, pagination.per_page);
+
+  const response = await client.post(`/api/user/filter/${pagination.page}`).send(request).end();
+
+  // console.log(users.toJSON())
+  // console.log(response.body.data);
+  response.assertStatus(200);
+
+  response.assertJSON({
+    message: 'Operacion exitosa',
+    data: users.toJSON()
+  })
+
+})
+
+test('allow null parameters, route: GET /api/user/filter/:page', async ({ client }) => {
+
+  const pagination = {
+    page: 1,
+    per_page: 5,
+  };
+
+  const request = {
+    first_name: null,
+    last_name: null,
+    email: null,
+  };
+
+  const users = await User
+  .query()
+  .hasProfile()
+  .paginate(pagination.page, pagination.per_page);
+
+  const response = await client.post(`/api/user/filter/${pagination.page}`).send(request).end();
+
+  // console.log(users.toJSON())
+  // console.log(response.body.data);
+  response.assertStatus(200);
+
+  response.assertJSON({
+    message: 'Operacion exitosa',
+    data: users.toJSON()
+  })
+
+})
+
+test('if you receive parameters they must be valid, route: GET /api/user/filter/:page', async ({ client }) => {
+
+  const pagination = {
+    page: 1,
+    per_page: 5,
+  };
+
+  const request = {
+    first_name: 10,
+    last_name: 20,
+    email: 15
+  };
+
+  const rules = {
+    first_name: "string",
+    last_name: "string",
+    email: "string"
+  };
+
+  const messages = {
+    'first_name.string': 'El campo primer nombre debe ser una cadena de caracteres',
+    'last_name.string': 'El campo primer nombre debe ser una cadena de caracteres',
+    'email.string': 'El campo primer nombre debe ser una cadena de caracteres'
+  };
+
+  const validation = await validateAll(request, rules, messages);
+
+  const response = await client.post(`/api/user/filter/${pagination.page}`).send(request).end();
+
+  // console.log(response.body);
+  response.assertStatus(422);
+
+  response.assertJSON({
+    errors: validation.messages()
+  })
+
+})
+
+test('Filter all users by first_name success, route: GET /api/user/filter/:page', async ({ client }) => {
+
+  const pagination = {
+    page: 1,
+    per_page: 5,
+  };
+
+  const request = {
+    first_name: 'super',
+    last_name: '',
+    email: '',
+  };
+
+  const users = await User
+  .query()
+  .where('first_name', 'LIKE', '%' + request.first_name + '%')
+  .hasProfile()
+  .paginate(pagination.page, pagination.per_page);
+
+  const response = await client.post(`/api/user/filter/${pagination.page}`).send(request).end();
+
+  // console.log(users.toJSON())
+  // console.log(response.body.data);
+  response.assertStatus(200);
+
+  response.assertJSON({
+    message: 'Operacion exitosa',
+    data: users.toJSON()
+  })
+
+})
+
+test('Filter all users by last_name success, route: GET /api/user/filter/:page', async ({ client }) => {
+
+  const pagination = {
+    page: 1,
+    per_page: 5,
+  };
+
+  const request = {
+    first_name: '',
+    last_name: 'User_2',
+    email: '',
+  };
+
+  const users = await User
+  .query()
+  .where('last_name', 'LIKE', '%' + request.last_name + '%')
+  .hasProfile()
+  .paginate(pagination.page, pagination.per_page);
+
+  const response = await client.post(`/api/user/filter/${pagination.page}`).send(request).end();
+
+  // console.log(users.toJSON())
+  // console.log(response.body.data);
+  response.assertStatus(200);
+
+  response.assertJSON({
+    message: 'Operacion exitosa',
+    data: users.toJSON()
+  })
+
+})
+
+test('Filter all users by email success, route: GET /api/user/filter/:page', async ({ client }) => {
+
+  const pagination = {
+    page: 1,
+    per_page: 5,
+  };
+
+  const request = {
+    first_name: '',
+    last_name: '',
+    email: 'superuser2@mail'
+  };
+
+  const users = await User
+  .query()
+  .where('email', 'LIKE', '%' + request.email + '%')
+  .hasProfile()
+  .paginate(pagination.page, pagination.per_page);
+
+  const response = await client.post(`/api/user/filter/${pagination.page}`).send(request).end();
+
+  // console.log(users.toJSON())
+  // console.log(response.body.data);
+  response.assertStatus(200);
+
+  response.assertJSON({
+    message: 'Operacion exitosa',
+    data: users.toJSON()
+  })
+
+})
+
+test(
+  'Filter all users by first_name and last_name success, route: GET /api/user/filter/:page',
+  async ({ client }) => {
+
+  const pagination = {
+    page: 1,
+    per_page: 5,
+  };
+
+  const request = {
+    first_name: 'Super',
+    last_name: 'User',
+    email: '',
+  };
+
+  const users = await User
+  .query()
+  .where('first_name', 'LIKE', '%' + request.first_name + '%')
+  .where('last_name', 'LIKE', '%' + request.last_name + '%')
+  .hasProfile()
+  .paginate(pagination.page, pagination.per_page);
+
+  const response = await client.post(`/api/user/filter/${pagination.page}`).send(request).end();
+
+  // console.log(users.toJSON())
+  // console.log(response.body.data);
+  response.assertStatus(200);
+
+  response.assertJSON({
+    message: 'Operacion exitosa',
+    data: users.toJSON()
+  })
+
+})

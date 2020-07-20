@@ -3,7 +3,7 @@
 const User = use('App/Models/User');
 // const Role = use('Adonis/Acl/Role');
 
-const { validate } = use("Validator");
+const { validateAll } = use("Validator");
 
 class AuthController {
 
@@ -12,20 +12,21 @@ class AuthController {
 
             const rules = {
                 email: "required|email",
-                password: "required"
+                password: "required|string"
             };
 
             const messages = {
                 'email.required': 'El correo electronico es requerido',
                 'email.email': 'Por favor ingresar un correo valido',
                 'password.required': 'La contraseña es requerida',
+                'password.string': 'La contraseña debe ser una cadena de caracteres',
             }
 
-            const validation = await validate(request.all(), rules, messages);
+            const validation = await validateAll(request.all(), rules, messages);
 
             if (validation.fails()) {
                 return response.status(422).send({
-                    error: validation.messages()
+                    errors: validation.messages()
                 });
             }
 

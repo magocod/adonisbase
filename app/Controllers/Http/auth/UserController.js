@@ -6,7 +6,7 @@
 
 const User = use('App/Models/User');
 
-const { validate } = use("Validator");
+const { validateAll } = use("Validator");
 
 /**
  * Resourceful controller for interacting with users
@@ -86,28 +86,41 @@ class UserController {
       const page = params.page || 1;
 
       const rules = {
-        first_name: "string"
+        first_name: "string",
+        last_name: "string",
+        email: "string"
       };
 
       const messages = {
-        'first_name': 'El campo primer nombre debe ser una cadena de caracteres',
+        'first_name.string': 'El campo primer nombre debe ser una cadena de caracteres',
+        'last_name.string': 'El campo primer nombre debe ser una cadena de caracteres',
+        'email.string': 'El campo primer nombre debe ser una cadena de caracteres'
       };
 
-      const validation = await validate(request.all(), rules, messages);
+      const validation = await validateAll(request.all(), rules, messages);
 
       if (validation.fails()) {
         return response.status(422).send({
-          error: validation.messages()
+          errors: validation.messages()
         });
       }
 
-      const { first_name } = request.all();
+      const { first_name, last_name, email } = request.all();
       // console.log(request.all());
+      // console.log(first_name === undefined);
 
       const querySet = User.query()
 
-      if (first_name !== null) {
+      if (first_name !== null && first_name !== undefined) {
         querySet.where('first_name', 'LIKE', '%' + first_name + '%')
+      }
+
+      if (last_name !== null && last_name !== undefined) {
+        querySet.where('last_name', 'LIKE', '%' + last_name + '%')
+      }
+
+      if (email !== null && email !== undefined) {
+        querySet.where('email', 'LIKE', '%' + email + '%')
       }
 
       const paginationData = await querySet.hasProfile().paginate(page, 5);
