@@ -37,5 +37,5 @@ Route.resource('api/users', 'auth/UserController').apiOnly().middleware(
 
 // roles
 Route.resource('api/roles', 'auth/RoleController').apiOnly().middleware(
-	['auth', 'is:(super_user || admin)']
+	['auth:jwt', 'is:(super_user || admin']
 );

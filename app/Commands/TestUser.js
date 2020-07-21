@@ -2,6 +2,8 @@
 
 const { Command } = require('@adonisjs/ace')
 
+const Database = use('Database')
+
 const User = use('App/Models/User')
 const Role = use('Adonis/Acl/Role')
 const Permission = use('Adonis/Acl/Permission')
@@ -137,6 +139,9 @@ class TestUser extends Command {
       const userInstance = await User.create(userData);
       await userInstance.roles().attach([userData.role_id])
     }
+
+    // Without the following line, the command will not exit!
+    Database.close()
 
   }
 }
