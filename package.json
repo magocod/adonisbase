@@ -7,7 +7,11 @@
   "scripts": {
     "start": "node server.js",
     "test": "node ace test",
-    "coverage": "nyc node ace test"
+    "test_auth": "node ace test --glob test/functional/auth/*.js",
+    "test_role": "node ace test --glob test/functional/role/*.js",
+    "test_user": "node ace test --glob test/functional/user/*.js",
+    "coverage": "nyc node ace test",
+    "test_unique_example": "node ace test --files test/functional/role/role-list.spec.js"
   },
   "keywords": [
     "adonisjs",
