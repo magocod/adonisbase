@@ -28,8 +28,14 @@ Route.group(() => {
 Route.group(() => {
   Route.get('all/:page?', 'auth/UserController.indexPaginate');
   Route.post('filter/:page?', 'auth/UserController.indexFilter');
-}).prefix('api/user');
-Route.resource('api/users', 'auth/UserController').apiOnly();
+}).prefix('api/user').middleware(
+	['auth', 'is:(super_user || admin)']
+);
+Route.resource('api/users', 'auth/UserController').apiOnly().middleware(
+	['auth', 'is:(super_user || admin)']
+);
 
 // roles
-Route.resource('api/roles', 'auth/RoleController').apiOnly();
+Route.resource('api/roles', 'auth/RoleController').apiOnly().middleware(
+	['auth', 'is:(super_user || admin)']
+);

@@ -2,9 +2,12 @@
 
 const { test, trait } = use('Test/Suite')('User General Filter, auth/UserController.indexFilter')
 trait('Test/ApiClient')
+trait('Auth/Client')
 
 const User = use('App/Models/User');
 const { validateAll } = use("Validator");
+
+const enumUsersID = require('../../fixtures/user.enum');
 
 test('Returns everything if it does not receive parameters, route: GET /api/user/filter/:page', async ({ client }) => {
 
@@ -15,12 +18,16 @@ test('Returns everything if it does not receive parameters, route: GET /api/user
 
   const request = {};
 
+  const user = await User.find(enumUsersID.SUPER_USER);
   const users = await User
   .query()
   .hasProfile()
   .paginate(pagination.page, pagination.per_page);
 
-  const response = await client.post(`/api/user/filter/${pagination.page}`).send(request).end();
+  const response = await client.post(`/api/user/filter/${pagination.page}`)
+  .loginVia(user, 'jwt')
+  .send(request)
+  .end();
 
   // console.log(users.toJSON())
   // console.log(response.body.data);
@@ -46,12 +53,16 @@ test('allow null parameters, route: GET /api/user/filter/:page', async ({ client
     email: null,
   };
 
+  const user = await User.find(enumUsersID.SUPER_USER);
   const users = await User
   .query()
   .hasProfile()
   .paginate(pagination.page, pagination.per_page);
 
-  const response = await client.post(`/api/user/filter/${pagination.page}`).send(request).end();
+  const response = await client.post(`/api/user/filter/${pagination.page}`)
+  .loginVia(user, 'jwt')
+  .send(request)
+  .end();
 
   // console.log(users.toJSON())
   // console.log(response.body.data);
@@ -91,7 +102,12 @@ test('if you receive parameters they must be valid, route: GET /api/user/filter/
 
   const validation = await validateAll(request, rules, messages);
 
-  const response = await client.post(`/api/user/filter/${pagination.page}`).send(request).end();
+  const user = await User.find(enumUsersID.SUPER_USER);
+
+  const response = await client.post(`/api/user/filter/${pagination.page}`)
+  .loginVia(user, 'jwt')
+  .send(request)
+  .end();
 
   // console.log(response.body);
   response.assertStatus(422);
@@ -115,13 +131,17 @@ test('Filter all users by first_name success, route: GET /api/user/filter/:page'
     email: '',
   };
 
+  const user = await User.find(enumUsersID.SUPER_USER);
   const users = await User
   .query()
   .where('first_name', 'LIKE', '%' + request.first_name + '%')
   .hasProfile()
   .paginate(pagination.page, pagination.per_page);
 
-  const response = await client.post(`/api/user/filter/${pagination.page}`).send(request).end();
+  const response = await client.post(`/api/user/filter/${pagination.page}`)
+  .loginVia(user, 'jwt')
+  .send(request)
+  .end();
 
   // console.log(users.toJSON())
   // console.log(response.body.data);
@@ -147,13 +167,17 @@ test('Filter all users by last_name success, route: GET /api/user/filter/:page',
     email: '',
   };
 
+  const user = await User.find(enumUsersID.SUPER_USER);
   const users = await User
   .query()
   .where('last_name', 'LIKE', '%' + request.last_name + '%')
   .hasProfile()
   .paginate(pagination.page, pagination.per_page);
 
-  const response = await client.post(`/api/user/filter/${pagination.page}`).send(request).end();
+  const response = await client.post(`/api/user/filter/${pagination.page}`)
+  .loginVia(user, 'jwt')
+  .send(request)
+  .end();
 
   // console.log(users.toJSON())
   // console.log(response.body.data);
@@ -179,13 +203,17 @@ test('Filter all users by email success, route: GET /api/user/filter/:page', asy
     email: 'superuser2@mail'
   };
 
+  const user = await User.find(enumUsersID.SUPER_USER);
   const users = await User
   .query()
   .where('email', 'LIKE', '%' + request.email + '%')
   .hasProfile()
   .paginate(pagination.page, pagination.per_page);
 
-  const response = await client.post(`/api/user/filter/${pagination.page}`).send(request).end();
+  const response = await client.post(`/api/user/filter/${pagination.page}`)
+  .loginVia(user, 'jwt')
+  .send(request)
+  .end();
 
   // console.log(users.toJSON())
   // console.log(response.body.data);
@@ -213,6 +241,7 @@ test(
     email: '',
   };
 
+  const user = await User.find(enumUsersID.SUPER_USER);
   const users = await User
   .query()
   .where('first_name', 'LIKE', '%' + request.first_name + '%')
@@ -220,7 +249,10 @@ test(
   .hasProfile()
   .paginate(pagination.page, pagination.per_page);
 
-  const response = await client.post(`/api/user/filter/${pagination.page}`).send(request).end();
+  const response = await client.post(`/api/user/filter/${pagination.page}`)
+  .loginVia(user, 'jwt')
+  .send(request)
+  .end();
 
   // console.log(users.toJSON())
   // console.log(response.body.data);
