@@ -140,6 +140,10 @@ class TestUser extends Command {
       await userInstance.roles().attach([userData.role_id])
     }
 
+    // middleware error
+    // const user = await User.find(1);
+    // await user.roles().attach([adminRole.id])
+
     // Without the following line, the command will not exit!
     Database.close()
 

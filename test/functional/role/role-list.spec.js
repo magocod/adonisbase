@@ -27,18 +27,22 @@ test('Get all roles, route: GET /roles, success', async ({ client }) => {
 
 test('Super user or administrator credentials required, route: GET /roles, failed', async ({ client }) => {
 
-  let user = await User.find(enumUsersID.USER);
-  let response = await client.get('/api/roles').loginVia(user, 'jwt').end();
+  let response = await client.get('/api/roles').end();
+  response.assertStatus(401);
+
+  const user = await User.find(enumUsersID.USER);
+  response = await client.get('/api/roles').loginVia(user, 'jwt').end();
   // console.log(response);
   response.assertStatus(403);
 
-  response = await client.get('/api/roles').end();
-  response.assertStatus(401);
+})
 
-  user = await User.find(enumUsersID.ADMIN);
-  response = await client.get('/api/roles').loginVia(user, 'jwt').end();
-  console.log(response);
+test('Allow user administrators, route: GET /roles, failed', async ({ client }) => {
+
+  const user = await User.find(enumUsersID.ADMIN);
+  // console.log(await user.getRoles())
+  const response = await client.get('/api/roles').loginVia(user, 'jwt').end();
+  // console.log(response);
   response.assertStatus(200);
 
 })
-
