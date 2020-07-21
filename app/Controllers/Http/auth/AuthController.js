@@ -7,6 +7,16 @@ const { validateAll } = use("Validator");
 
 class AuthController {
 
+    /**
+     * [login description]
+     * 
+     * user authentication (email, password)
+     *
+     * @param {object} ctx
+     * @param {Request} ctx.request
+     * @param  {any} options.auth        [description]
+     * @param {Response} ctx.response    [description]
+     */
     async login({ request, auth, response }) {
         try {
 
