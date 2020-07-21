@@ -149,6 +149,59 @@ class UserController {
    * @param {Response} ctx.response
    */
   async store ({ request, response }) {
+    try {
+      const rules = {
+        username: "required|string|unique:users",
+        email: "required|email|unique:users",
+        password: "required|string",
+        first_name: "required|string",
+        last_name: "required|string",
+        role_id: "required|range:1,4"
+      };
+
+      const validation = await validateAll(request.all(), rules);
+
+      if (validation.fails()) {
+        return response.status(422).send({
+          errors: validation.messages()
+        });
+      }
+
+      const userData = request.only([
+        'username',
+        'email',
+        'password',
+        'first_name',
+        'last_name',
+        'role_id'
+      ]);
+      // console.log(userData);
+
+      const userInstance = await User.create({
+        ...userData,
+        type_auth: 'web',
+        status: true,
+        is_active: true
+      });
+      // console.log(userInstance.toJSON());
+      const userResponse = await User.query().where(
+        'id', userInstance.id
+      ).hasProfile().first();
+
+      return response.status(201).json({
+        message: 'Usuario registrado',
+        data: userResponse
+      });
+
+    } catch (error) {
+      return response.status(error.status === undefined ? 400 : error.status).json({
+        error: {
+          message: "Error registrando usuario",
+          details: "",
+          err_message: error.message
+        }
+      });
+    }
   }
 
   /**
@@ -156,11 +209,30 @@ class UserController {
    * GET users/:id
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
-  async show ({ params, request, response, view }) {
+  async show ({ params, response }) {
+    try {
+      // console.log(params);
+      const userInstance = await User.findOrFail(params.id);
+      const userResponse = await User
+      .query()
+      .where('id', userInstance.id)
+      .hasProfile()
+      .first();
+      return response.status(200).json({
+        message: 'Operacion exitosa',
+        data: userResponse
+      });
+    } catch (error) {
+      return response.status(error.status === undefined ? 400 : error.status).json({
+        error: {
+          message: "Error buscando usuario",
+          details: "",
+          err_message: error.message
+        }
+      });
+    }
   }
 
   /**

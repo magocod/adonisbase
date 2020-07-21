@@ -78,7 +78,7 @@ test('Credentials must be valid', async ({ client }) => {
 
 })
 
-test('User not found, failed', async ({ client, assert }) => {
+test('User not found, error', async ({ client, assert }) => {
 
   const authData = {
     email: 'no_exist@mail.com',
@@ -90,7 +90,7 @@ test('User not found, failed', async ({ client, assert }) => {
   // console.log(response);
   response.assertStatus(404);
 
-  assert.equal(response.body.message, 'Autenticacion fallida');
-  assert.equal(response.body.details, 'Usuario no existe');
+  assert.equal(response.body.error.message, 'Autenticacion fallida');
+  assert.equal(response.body.error.details, 'Usuario no existe');
 
 })
