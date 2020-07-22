@@ -8,6 +8,7 @@
     "start": "node server.js",
     "test": "node ace test",
     "test_auth": "node ace test --glob test/functional/auth/*.js",
+    "test_permission": "node ace test --glob test/functional/permission/*.js",
     "test_role": "node ace test --glob test/functional/role/*.js",
     "test_user": "node ace test --glob test/functional/user/*.js",
     "coverage": "nyc node ace test",

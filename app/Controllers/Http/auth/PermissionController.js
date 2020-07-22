@@ -4,6 +4,8 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
+const Permission = use('Adonis/Acl/Permission')
+
 /**
  * Resourceful controller for interacting with permissions
  */
@@ -13,23 +15,14 @@ class PermissionController {
    * GET permissions
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
-  async index ({ request, response, view }) {
-  }
-
-  /**
-   * Render a form to be used for creating a new permission.
-   * GET permissions/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
+  async index ({ response }) {
+    const permissions = await Permission.all();
+    return response.status(200).json({
+      message: 'Operacion exitosa',
+      data: permissions
+    });
   }
 
   /**
@@ -53,18 +46,6 @@ class PermissionController {
    * @param {View} ctx.view
    */
   async show ({ params, request, response, view }) {
-  }
-
-  /**
-   * Render a form to update an existing permission.
-   * GET permissions/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
   }
 
   /**
