@@ -33,17 +33,16 @@ class User extends Model {
   }
 
   /**
-   * [rules description]
+   * [update_rules description]
    * @return {Object} [description]
    */
-  static get rules () {
+  static get update_rules() {
     return {
       username: "required|string|unique:users",
       email: "required|email|unique:users",
-      password: "required|string",
       first_name: "required|string",
       last_name: "required|string",
-      role_id: "required|range:1,4"
+      // role_id: "required|range:1,4"
     };
   }
 

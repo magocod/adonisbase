@@ -245,15 +245,8 @@ class UserController {
    */
   async update ({ params, request, response }) {
     try {
-      const rules = {
-        username: "required|string|unique:users",
-        email: "required|email|unique:users",
-        first_name: "required|string",
-        last_name: "required|string",
-        // role_id: "required|range:1,4"
-      };
 
-      const validation = await validateAll(request.all(), rules);
+      const validation = await validateAll(request.all(), User.update_rules);
 
       if (validation.fails()) {
         return response.status(422).send({
