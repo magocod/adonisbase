@@ -1,6 +1,6 @@
 'use strict'
 
-const { test, trait } = use('Test/Suite')('Auth Login, route: POST /login, AuthController')
+const { test, trait } = use('Test/Suite')('Auth Login, route: POST /api/auth/login, AuthController')
 trait('Test/ApiClient')
 
 const User = use('App/Models/User');
@@ -19,7 +19,7 @@ const authRulesMessages = {
     'password.string': 'La contraseña debe ser una cadena de caracteres',
 }
 
-test('Super user login successful, route: POST /login', async ({ client, assert }) => {
+test('Super user login successful', async ({ client, assert }) => {
 
 	const authData = {
 		email: 'superuser@mail.com',
@@ -90,7 +90,7 @@ test('User not found, error', async ({ client, assert }) => {
   // console.log(response);
   response.assertStatus(404);
 
-  assert.equal(response.body.error.message, 'Autenticacion fallida');
-  assert.equal(response.body.error.details, 'Usuario no existe');
+  assert.equal(response.body.error.message, 'Usuario no existe');
+  assert.equal(response.body.error.details, '');
 
 })

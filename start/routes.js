@@ -26,21 +26,22 @@ Route.group(() => {
 
 // users
 Route.group(() => {
+  Route.get('logout', 'auth/AuthController.logout');
   Route.get('all/:page?', 'auth/UserController.indexPaginate');
   Route.post('filter/:page?', 'auth/UserController.indexFilter');
 }).prefix('api/user').middleware(
-	['auth', 'isin:super_user,admin']
+  ['auth', 'isin:super_user,admin']
 );
 Route.resource('api/users', 'auth/UserController').apiOnly().middleware(
-	['auth', 'isin:super_user,admin']
+  ['auth', 'isin:super_user,admin']
 );
 
 // roles
 Route.resource('api/roles', 'auth/RoleController').apiOnly().middleware(
-	['auth:jwt', "isin:super_user,admin"]
+  ['auth:jwt', "isin:super_user,admin"]
 );
 
 // permissions
 Route.resource('api/permissions', 'auth/PermissionController').apiOnly().middleware(
-	['auth:jwt', "is:super_user, admin"]
+  ['auth:jwt', "is:super_user, admin"]
 );

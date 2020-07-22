@@ -46,17 +46,21 @@ class AuthController {
 
       if (user === null) {
         return response.status(404).json({
-          message: 'Usuario no existe',
-          details: "",
-          err_message: ""
+          error: {
+            message: 'Usuario no existe',
+            details: "",
+            err_message: ""
+          }
         });
       }
 
       if (user.status === false) {
         return response.status(403).json({
-          message: 'No puedes ingresar en este momentos, porfavor valida tu cuenta',
-          details: "",
-          err_message: ""
+          error: {
+            message: 'No puedes ingresar en este momentos, porfavor valida tu cuenta',
+            details: "",
+            err_message: ""
+          }
         });
       }
 
@@ -88,11 +92,35 @@ class AuthController {
         err_message: error.message
       };
       if (error.status === 404) {
-        errorMessage.details = 'Usuario no existe';
+        errorMessage.message = 'Usuario no existe';
       }
       return response.status(
         error.status === undefined ? 400 : error.status
       ).json({ error: errorMessage });
+    }
+  }
+
+  /**
+   * [logout description]
+   * @param {any} ctx.auth     [description]
+   * @param {Response} ctx.response [description]
+   */
+  async logout({ auth, response }) {
+    try {
+      const user = await auth.getUser();
+      await user.tokens().delete();
+      return response.status(200).json({
+        data: null,
+        message: 'Se ha Deslogueado Sastifactoriamente'
+      });
+    } catch (error) {
+      return response.status(
+        error.status === undefined ? 400 : error.status
+      ).json({
+        message: 'Usuario no existe',
+        details: "",
+        err_message: ""
+      });
     }
   }
 
