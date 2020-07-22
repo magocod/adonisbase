@@ -32,6 +32,21 @@ class User extends Model {
     ]
   }
 
+  /**
+   * [rules description]
+   * @return {Object} [description]
+   */
+  static get rules () {
+    return {
+      username: "required|string|unique:users",
+      email: "required|email|unique:users",
+      password: "required|string",
+      first_name: "required|string",
+      last_name: "required|string",
+      role_id: "required|range:1,4"
+    };
+  }
+
   static scopeHasProfile(query) {
     return query.with('roles').with('permissions');
   }

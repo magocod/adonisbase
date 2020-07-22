@@ -32,7 +32,7 @@ test('create a user', async ({ client, assert }) => {
   };
 
   const user = await User.find(enumUsersID.SUPER_USER);
-  const countUserDb = await User.getCount();
+  const usersInDb = await User.getCount();
 
   const response = await client.post('/api/users')
   .loginVia(user, 'jwt')
@@ -55,8 +55,8 @@ test('create a user', async ({ client, assert }) => {
     data: userCreated.toJSON()
   })
 
-  // console.log(countUserDb, await User.getCount());
-  assert.equal(countUserDb + 1, await User.getCount());
+  // console.log(usersInDb, await User.getCount());
+  assert.equal(usersInDb + 1, await User.getCount());
 
 })
 
@@ -74,7 +74,7 @@ test('create user with wrong role, must be between 2 - 3, error', async ({ clien
   const validation = await validateAll(request, rules);
   // console.log(validation.messages())
   const user = await User.find(enumUsersID.SUPER_USER);
-  const countUserDb = await User.getCount();
+  const usersInDb = await User.getCount();
 
   const response = await client.post('/api/users')
   .loginVia(user, 'jwt')
@@ -82,13 +82,13 @@ test('create user with wrong role, must be between 2 - 3, error', async ({ clien
   .end();
 
   // console.log(response);
-  // console.log(countUserDb, await User.getCount());
+  // console.log(usersInDb, await User.getCount());
   response.assertStatus(422);
   response.assertJSON({
     errors: validation.messages()
   });
 
-  assert.equal(countUserDb, await User.getCount());
+  assert.equal(usersInDb, await User.getCount());
 
 })
 
@@ -106,7 +106,7 @@ test('all incorrect user parameters, error', async ({ client, assert }) => {
   const validation = await validateAll(request, rules);
   // console.log(validation.messages())
   const user = await User.find(enumUsersID.SUPER_USER);
-  const countUserDb = await User.getCount();
+  const usersInDb = await User.getCount();
 
   const response = await client.post('/api/users')
   .loginVia(user, 'jwt')
@@ -114,20 +114,20 @@ test('all incorrect user parameters, error', async ({ client, assert }) => {
   .end();
 
   // console.log(response);
-  // console.log(countUserDb, await User.getCount());
+  // console.log(usersInDb, await User.getCount());
   response.assertStatus(422);
   response.assertJSON({
     errors: validation.messages()
   });
 
-  assert.equal(countUserDb, await User.getCount());
+  assert.equal(usersInDb, await User.getCount());
 
 })
 
 test('Get a user by id, success', async ({ client, assert }) => {
 
-  const user = await User.find(enumUsersID.SUPER_USER);
-  const userInstance = await User
+  // const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User
   .query()
   .where('id', enumUsersID.SUPER_USER)
   .hasProfile()
@@ -141,7 +141,7 @@ test('Get a user by id, success', async ({ client, assert }) => {
   response.assertStatus(200);
   response.assertJSON({
     message: 'Operacion exitosa',
-    data: userInstance.toJSON(),
+    data: user.toJSON(),
   });
 
 })
@@ -174,4 +174,3 @@ test('Get a user by id, letter parameter in url, error', async ({ client, assert
   response.assertStatus(404);
 
 })
-

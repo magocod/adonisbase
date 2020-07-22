@@ -244,6 +244,60 @@ class UserController {
    * @param {Response} ctx.response
    */
   async update ({ params, request, response }) {
+    try {
+      const rules = {
+        username: "required|string|unique:users",
+        email: "required|email|unique:users",
+        first_name: "required|string",
+        last_name: "required|string",
+        // role_id: "required|range:1,4"
+      };
+
+      const validation = await validateAll(request.all(), rules);
+
+      if (validation.fails()) {
+        return response.status(422).send({
+          errors: validation.messages()
+        });
+      }
+
+      const userData = request.only([
+        'username',
+        'email',
+        'first_name',
+        'last_name',
+        // 'role_id'
+      ]);
+      // console.log(userData);
+
+      const userInstance = await User.findOrFail(params.id);
+
+      userInstance.username = userData.name;
+      userInstance.email = userData.email;
+      userInstance.first_name = userData.first_name;
+      userInstance.last_name = userData.last_name;
+      // userInstance.role_id = userData.role_id;
+      
+      await userInstance.save();
+
+      const userResponse = await User.query().where(
+        'id', userInstance.id
+      ).hasProfile().first();
+
+      return response.status(200).json({
+        message: 'Usuario modificado',
+        data: userResponse
+      });
+
+    } catch (error) {
+      return response.status(error.status === undefined ? 400 : error.status).json({
+        error: {
+          message: "Error modificando usuario",
+          details: "",
+          err_message: error.message
+        }
+      });
+    }
   }
 
   /**
@@ -251,10 +305,51 @@ class UserController {
    * DELETE users/:id
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy ({ params, request, response }) {
+  async destroy ({ params, response, auth }) {
+    try {
+      // console.log(params);
+      const userInstance = await User.findOrFail(params.id);
+
+      if (auth.user.id == params.id) {
+        // you cannot eliminate
+        return response.status(403).json({
+          message: 'No puedes eliminarte a ti mismo',
+          details: "",
+          err_message: ""
+        });
+      }
+
+      const roles = await userInstance.roles().fetch();
+      const rolesName = await roles.toJSON().map((role) => {
+        return role.name;
+      });
+
+      if (rolesName.includes('super_user')) {
+        // Cannot delete superusers with http queries
+        return response.status(403).json({
+          message: 'No se pueden eliminar superusuarios con consultas http',
+          details: "",
+          err_message: ""
+        });
+      }
+
+      await userInstance.delete();
+
+      return response.status(200).json({
+        message: 'Usuario eliminado',
+        data: null
+      });
+    } catch (error) {
+      return response.status(error.status === undefined ? 400 : error.status).json({
+        error: {
+          message: "Error eliminando usuario",
+          details: "",
+          err_message: error.message
+        }
+      });
+    }
   }
 }
 
