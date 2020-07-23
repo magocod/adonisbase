@@ -1,6 +1,6 @@
 'use strict'
 
-const { test, trait } = use('Test/Suite')('Auth Logout, route: GET /api/user/logout, AuthController')
+const { test, trait } = use('Test/Suite')('Auth Logout, route: GET /api/auth/logout, AuthController')
 trait('Test/ApiClient')
 trait('Auth/Client')
 
@@ -10,7 +10,7 @@ const enumUsersID = require('../../fixtures/user.enum');
 test('close user session, success', async ({ client, assert }) => {
 
   const user = await User.find(enumUsersID.SUPER_USER);
-  const response = await client.get('/api/user/logout').loginVia(user, 'jwt').end();
+  const response = await client.get('/api/auth/logout').loginVia(user, 'jwt').end();
 
   // console.log(response);
   response.assertStatus(200);
@@ -24,7 +24,7 @@ test('close user session, success', async ({ client, assert }) => {
 
 test('log out without being authenticated', async ({ client, assert }) => {
 
-  const response = await client.get('/api/user/logout').end();
+  const response = await client.get('/api/auth/logout').end();
 
   // console.log(response);
   response.assertStatus(401);

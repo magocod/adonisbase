@@ -1,6 +1,8 @@
 'use strict'
 
-const { test, trait } = use('Test/Suite')('User General Filter, auth/UserController.indexFilter')
+const { test, trait } = use('Test/Suite')(
+  'User General Filter, route: GET /api/user/filter/:page, auth/UserController.indexFilter'
+)
 trait('Test/ApiClient')
 trait('Auth/Client')
 
@@ -9,7 +11,7 @@ const { validateAll } = use("Validator");
 
 const enumUsersID = require('../../fixtures/user.enum');
 
-test('Returns everything if it does not receive parameters, route: GET /api/user/filter/:page', async ({ client }) => {
+test('Returns everything if it does not receive parameters', async ({ client }) => {
 
   const pagination = {
     page: 1,
@@ -40,7 +42,7 @@ test('Returns everything if it does not receive parameters, route: GET /api/user
 
 })
 
-test('allow null parameters, route: GET /api/user/filter/:page', async ({ client }) => {
+test('allow null parameters', async ({ client }) => {
 
   const pagination = {
     page: 1,
@@ -75,7 +77,7 @@ test('allow null parameters, route: GET /api/user/filter/:page', async ({ client
 
 })
 
-test('if you receive parameters they must be valid, route: GET /api/user/filter/:page', async ({ client }) => {
+test('if you receive parameters they must be valid', async ({ client }) => {
 
   const pagination = {
     page: 1,
@@ -118,7 +120,7 @@ test('if you receive parameters they must be valid, route: GET /api/user/filter/
 
 })
 
-test('Filter all users by first_name success, route: GET /api/user/filter/:page', async ({ client }) => {
+test('Filter all users by first_name success', async ({ client }) => {
 
   const pagination = {
     page: 1,
@@ -154,7 +156,7 @@ test('Filter all users by first_name success, route: GET /api/user/filter/:page'
 
 })
 
-test('Filter all users by last_name success, route: GET /api/user/filter/:page', async ({ client }) => {
+test('Filter all users by last_name success', async ({ client }) => {
 
   const pagination = {
     page: 1,
@@ -190,7 +192,7 @@ test('Filter all users by last_name success, route: GET /api/user/filter/:page',
 
 })
 
-test('Filter all users by email success, route: GET /api/user/filter/:page', async ({ client }) => {
+test('Filter all users by email success', async ({ client }) => {
 
   const pagination = {
     page: 1,
@@ -227,7 +229,7 @@ test('Filter all users by email success, route: GET /api/user/filter/:page', asy
 })
 
 test(
-  'Filter all users by first_name and last_name success, route: GET /api/user/filter/:page',
+  'Filter all users by first_name and last_name success',
   async ({ client }) => {
 
   const pagination = {
@@ -246,6 +248,124 @@ test(
   .query()
   .where('first_name', 'LIKE', '%' + request.first_name + '%')
   .where('last_name', 'LIKE', '%' + request.last_name + '%')
+  .hasProfile()
+  .paginate(pagination.page, pagination.per_page);
+
+  const response = await client.post(`/api/user/filter/${pagination.page}`)
+  .loginVia(user, 'jwt')
+  .send(request)
+  .end();
+
+  // console.log(users.toJSON())
+  // console.log(response.body.data);
+  response.assertStatus(200);
+
+  response.assertJSON({
+    message: 'Operacion exitosa',
+    data: users.toJSON()
+  })
+
+})
+
+test(
+  'Filter all users by first_name and email success',
+  async ({ client }) => {
+
+  const pagination = {
+    page: 1,
+    per_page: 5,
+  };
+
+  const request = {
+    first_name: 'admin',
+    last_name: '',
+    email: 'mail.com',
+  };
+
+  const user = await User.find(enumUsersID.SUPER_USER);
+  const users = await User
+  .query()
+  .where('first_name', 'LIKE', '%' + request.first_name + '%')
+  .where('email', 'LIKE', '%' + request.last_name + '%')
+  .hasProfile()
+  .paginate(pagination.page, pagination.per_page);
+
+  const response = await client.post(`/api/user/filter/${pagination.page}`)
+  .loginVia(user, 'jwt')
+  .send(request)
+  .end();
+
+  // console.log(users.toJSON())
+  // console.log(response.body.data);
+  response.assertStatus(200);
+
+  response.assertJSON({
+    message: 'Operacion exitosa',
+    data: users.toJSON()
+  })
+
+})
+
+test(
+  'Filter all users by last_name and email success',
+  async ({ client }) => {
+
+  const pagination = {
+    page: 1,
+    per_page: 5,
+  };
+
+  const request = {
+    first_name: '',
+    last_name: 'user',
+    email: 'user',
+  };
+
+  const user = await User.find(enumUsersID.SUPER_USER);
+  const users = await User
+  .query()
+  .where('last_name', 'LIKE', '%' + request.last_name + '%')
+  .where('email', 'LIKE', '%' + request.email + '%')
+  .hasProfile()
+  .paginate(pagination.page, pagination.per_page);
+
+  const response = await client.post(`/api/user/filter/${pagination.page}`)
+  .loginVia(user, 'jwt')
+  .send(request)
+  .end();
+
+  // console.log(users.toJSON())
+  // console.log(response.body.data);
+  response.assertStatus(200);
+
+  response.assertJSON({
+    message: 'Operacion exitosa',
+    data: users.toJSON()
+  })
+
+})
+
+test(
+  'Filter all users by first_name & last_name & email, success',
+  async ({ client }) => {
+
+  const pagination = {
+    page: 1,
+    per_page: 5,
+  };
+
+  const request = {
+    first_name: 'admin',
+    last_name: 'user',
+    email: 'mail.',
+  };
+
+  const user = await User.find(enumUsersID.SUPER_USER);
+  const users = await User
+  .query()
+  .where('first_name', 'LIKE', '%' + request.first_name + '%')
+  .where('last_name', 'LIKE', '%' + request.last_name + '%')
+  .where('email', 'LIKE', '%' + request.email + '%')
   .hasProfile()
   .paginate(pagination.page, pagination.per_page);
 
