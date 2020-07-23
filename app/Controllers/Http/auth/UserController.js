@@ -6,7 +6,10 @@
 
 const User = use('App/Models/User');
 
+const Env = use('Env');
 const { validateAll } = use("Validator");
+
+const PaginationPageSize = parseInt(Env.get('PAGINATION_PAGE_SIZE'));
 
 /**
  * Resourceful controller for interacting with users
@@ -52,10 +55,12 @@ class UserController {
     try {
       const page = params.page || 1;
 
+      // console.log('page', typeof PaginationPageSize);
+
       const users = await User
       .query()
       .hasProfile()
-      .paginate(page, 5);
+      .paginate(page, PaginationPageSize);
 
       return response.status(200).json({
         message: 'Operacion exitosa',
@@ -123,7 +128,7 @@ class UserController {
         querySet.where('email', 'LIKE', '%' + email + '%')
       }
 
-      const paginationData = await querySet.hasProfile().paginate(page, 5);
+      const paginationData = await querySet.hasProfile().paginate(page, PaginationPageSize);
 
       return response.status(200).json({
         message: 'Operacion exitosa',

@@ -6,16 +6,19 @@ const { test, trait } = use('Test/Suite')(
 trait('Test/ApiClient')
 trait('Auth/Client')
 
+const Env = use('Env');
 const User = use('App/Models/User');
 const { validateAll } = use("Validator");
 
 const enumUsersID = require('../../fixtures/user.enum');
 
+const PaginationPageSize = parseInt(Env.get('PAGINATION_PAGE_SIZE'));
+
 test('Returns everything if it does not receive parameters', async ({ client }) => {
 
   const pagination = {
     page: 1,
-    per_page: 5,
+    per_page: PaginationPageSize,
   };
 
   const request = {};
@@ -46,7 +49,7 @@ test('allow null parameters', async ({ client }) => {
 
   const pagination = {
     page: 1,
-    per_page: 5,
+    per_page: PaginationPageSize,
   };
 
   const request = {
@@ -81,7 +84,7 @@ test('if you receive parameters they must be valid', async ({ client }) => {
 
   const pagination = {
     page: 1,
-    per_page: 5,
+    per_page: PaginationPageSize,
   };
 
   const request = {
@@ -124,7 +127,7 @@ test('Filter all users by first_name success', async ({ client }) => {
 
   const pagination = {
     page: 1,
-    per_page: 5,
+    per_page: PaginationPageSize,
   };
 
   const request = {
@@ -160,7 +163,7 @@ test('Filter all users by last_name success', async ({ client }) => {
 
   const pagination = {
     page: 1,
-    per_page: 5,
+    per_page: PaginationPageSize,
   };
 
   const request = {
@@ -196,7 +199,7 @@ test('Filter all users by email success', async ({ client }) => {
 
   const pagination = {
     page: 1,
-    per_page: 5,
+    per_page: PaginationPageSize,
   };
 
   const request = {
@@ -234,7 +237,7 @@ test(
 
   const pagination = {
     page: 1,
-    per_page: 5,
+    per_page: PaginationPageSize,
   };
 
   const request = {
@@ -273,7 +276,7 @@ test(
 
   const pagination = {
     page: 1,
-    per_page: 5,
+    per_page: PaginationPageSize,
   };
 
   const request = {
@@ -312,7 +315,7 @@ test(
 
   const pagination = {
     page: 1,
-    per_page: 5,
+    per_page: PaginationPageSize,
   };
 
   const request = {
@@ -351,7 +354,7 @@ test(
 
   const pagination = {
     page: 1,
-    per_page: 5,
+    per_page: PaginationPageSize,
   };
 
   const request = {
