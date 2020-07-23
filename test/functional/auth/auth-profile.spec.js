@@ -1,6 +1,6 @@
 'use strict'
 
-const { test, trait } = use('Test/Suite')('Auth Profile, AuthController')
+const { test, trait } = use('Test/Suite')('Auth Profile, auth/AuthController')
 trait('Test/ApiClient')
 trait('Auth/Client')
 

@@ -1,6 +1,6 @@
 'use strict'
 
-const { test, trait } = use('Test/Suite')('Auth Login, route: POST /api/auth/login, AuthController')
+const { test, trait } = use('Test/Suite')('Auth Login, auth/AuthController')
 trait('Test/ApiClient')
 
 const User = use('App/Models/User');
