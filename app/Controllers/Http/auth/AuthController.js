@@ -72,8 +72,8 @@ class AuthController {
 
       const userProfile = await User
         .query()
-        .hasProfile()
         .where('email', email)
+        .hasProfile()
         .first();
 
       return response.status(200).json({
@@ -117,9 +117,38 @@ class AuthController {
       return response.status(
         error.status === undefined ? 400 : error.status
       ).json({
-        message: 'Usuario no existe',
+        message: 'Error cerrando sesion',
         details: "",
-        err_message: ""
+        err_message: error.message
+      });
+    }
+  }
+
+  /**
+   * [currentUser description]
+   * @param  {[type]} options.auth     [description]
+   * @param  {[type]} options.response [description]
+   * @return {[type]}                  [description]
+   */
+  async currentUser({ auth, response }) {
+    try {
+      const user = await auth.getUser();
+      const userData = await User
+      .query()
+      .where('id', user.id)
+      .hasProfile()
+      .first();
+      return response.status(200).json({
+        message: "Consulta exitosa, usuario autenticado",
+        data: userData
+      });
+    } catch (error) {
+      return response.status(
+        error.status === undefined ? 400 : error.status
+      ).json({
+        message: 'Error recuperando usuario',
+        details: "",
+        err_message: error.message
       });
     }
   }

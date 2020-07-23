@@ -7,7 +7,7 @@ trait('Auth/Client')
 const User = use('App/Models/User');
 const enumUsersID = require('../../fixtures/user.enum');
 
-test('close user session, success', async ({ client, assert }) => {
+test('close user session, success', async ({ client }) => {
 
   const user = await User.find(enumUsersID.SUPER_USER);
   const response = await client.get('/api/auth/logout').loginVia(user, 'jwt').end();

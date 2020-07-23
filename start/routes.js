@@ -22,6 +22,7 @@ Route.get('/', () => {
 
 Route.group(() => {
   Route.post('login', 'auth/AuthController.login');
+  Route.get('profile', 'auth/AuthController.currentUser').middleware('auth:jwt');
   Route.get('logout', 'auth/AuthController.logout').middleware('auth:jwt');
 }).prefix('api/auth');
 
