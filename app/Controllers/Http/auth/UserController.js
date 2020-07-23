@@ -270,6 +270,20 @@ class UserController {
 
       const userInstance = await User.findOrFail(params.id);
 
+      const roles = await userInstance.roles().fetch();
+      const rolesName = await roles.toJSON().map((role) => {
+        return role.name;
+      });
+
+      if (rolesName.includes('super_user')) {
+        // You do not have permission to edit this user
+        return response.status(403).json({
+          message: 'No tienes permiso para editar este usuario',
+          details: "Solo un superusuario se puede modificar a si mismo",
+          err_message: ""
+        });
+      }
+
       userInstance.username = userData.name;
       userInstance.email = userData.email;
       userInstance.first_name = userData.first_name;
@@ -327,8 +341,8 @@ class UserController {
       if (rolesName.includes('super_user')) {
         // Cannot delete superusers with http queries
         return response.status(403).json({
-          message: 'No se pueden eliminar superusuarios con consultas http',
-          details: "",
+          message: 'No tienes permiso para eliminar este usuario',
+          details: "No se pueden eliminar superusuarios con consultas http",
           err_message: ""
         });
       }

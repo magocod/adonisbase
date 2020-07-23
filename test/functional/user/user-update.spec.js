@@ -110,3 +110,55 @@ test('check user edit form', async ({ client, assert }) => {
   assert.equal(usersInDb, await User.getCount());
 
 })
+
+test("can't edit superusers", async ({ client, assert }) => {
+
+  const request = {
+    username: 'editet_super_user',
+    email: "userupdated@mail.com",
+    first_name: 'name',
+    last_name: 'other_name',
+  };
+
+  const user = await User.find(enumUsersID.SUPER_USER);
+  const userToUpdate = await User.create({
+    username: 'user_u',
+    first_name: 'user_f_u',
+    last_name: 'user_s_u',
+    email: 'useroriginal@mail.com',
+    status: true,
+    is_active: true,
+    role_id: enumRolesID.SUPER_USER,
+    password: '123'
+  });
+  await userToUpdate.roles().attach([enumRolesID.SUPER_USER])
+  const usersInDb = await User.getCount();
+
+  const response = await client.put(`/api/users/${userToUpdate.id}`)
+  .loginVia(user, 'jwt')
+  .send(request)
+  .end();
+
+  const userNotUpdated = await User.find(userToUpdate.id)
+  await userToUpdate.reload()
+
+  // console.log(response);
+  response.assertStatus(403);
+
+  response.assertJSON({
+    message: 'No tienes permiso para editar este usuario',
+    details: "Solo un superusuario se puede modificar a si mismo",
+    err_message: ""
+  })
+
+  // console.log(userToUpdate.toJSON())
+  // console.log(userNotUpdated.toJSON())
+  assert.equal(
+    JSON.stringify(userToUpdate.toJSON()),
+    JSON.stringify(userNotUpdated.toJSON())
+  );
+
+  // console.log(usersInDb, await User.getCount());
+  assert.equal(usersInDb, await User.getCount());
+
+})

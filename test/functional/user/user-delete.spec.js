@@ -87,8 +87,8 @@ test('Cannot delete superusers with http queries', async ({ client, assert }) =>
   response.assertStatus(403);
 
   response.assertJSON({
-    message: 'No se pueden eliminar superusuarios con consultas http',
-    details: "",
+    message: 'No tienes permiso para eliminar este usuario',
+    details: "No se pueden eliminar superusuarios con consultas http",
     err_message: ""
   })
 
