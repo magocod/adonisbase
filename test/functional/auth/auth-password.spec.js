@@ -33,8 +33,6 @@ test('the user modifies his password, success', async ({ client, assert }) => {
 
 	const user = await User.find(enumUsersID.SUPER_USER);
 
-	const validation = await validateAll(request, passwordRules, passwordMessages);
-
 	const response = await client.post('/api/auth/change_password')
 	.loginVia(user, 'jwt')
 	.send(request)
@@ -75,8 +73,6 @@ test('wrong current password, error', async ({ client, assert }) => {
 
   const user = await User.find(enumUsersID.SUPER_USER);
 
-  const validation = await validateAll(request, passwordRules, passwordMessages);
-
   const response = await client.post('/api/auth/change_password')
   .loginVia(user, 'jwt')
   .send(request)
@@ -90,6 +86,53 @@ test('wrong current password, error', async ({ client, assert }) => {
     message: 'Contraseña actual incorrecta.',
     details: '',
     err_message: ''
+  })
+
+  const verifyOldPassword = await Hash.verify(
+    request.old_password,
+    user.password
+  );
+
+  const verifyNewPassword = await Hash.verify(
+    request.new_password,
+    user.password
+  );
+
+  const verifyCurrentPassword = await Hash.verify(
+    currentPassword,
+    user.password
+  );
+
+  assert.equal(verifyOldPassword, false);
+  assert.equal(verifyNewPassword, false);
+  assert.equal(verifyCurrentPassword, true);
+
+})
+
+test('passwords in invalid format, error', async ({ client, assert }) => {
+
+  const currentPassword = '123';
+
+  const request = {
+    old_password: false,
+    new_password: 10
+  };
+
+  const user = await User.find(enumUsersID.SUPER_USER);
+
+  const validation = await validateAll(request, passwordRules, passwordMessages);
+
+  const response = await client.post('/api/auth/change_password')
+  .loginVia(user, 'jwt')
+  .send(request)
+  .end();
+  await user.reload();
+
+  // console.log(response);
+  response.assertStatus(422);
+
+  response.assertJSON({
+    errors: validation.messages()
   })
 
   const verifyOldPassword = await Hash.verify(
