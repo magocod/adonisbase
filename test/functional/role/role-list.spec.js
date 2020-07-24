@@ -9,9 +9,9 @@ const Role = use('Adonis/Acl/Role');
 
 const enumUsersID = require('../../fixtures/user.enum');
 
-test('Get all roles, route: GET /roles, success', async ({ client }) => {
+test('Get all roles, success', async ({ client }) => {
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
   const roles = await Role.all();
   const response = await client.get('/api/roles').loginVia(user, 'jwt').end();
 
@@ -25,7 +25,7 @@ test('Get all roles, route: GET /roles, success', async ({ client }) => {
 
 })
 
-test('Super user or administrator credentials required, route: GET /roles, failed', async ({ client }) => {
+test('Root or administrator credentials required, failed', async ({ client }) => {
 
   let response = await client.get('/api/roles').end();
   response.assertStatus(401);
@@ -37,7 +37,7 @@ test('Super user or administrator credentials required, route: GET /roles, faile
 
 })
 
-test('Allow user administrators, route: GET /roles, failed', async ({ client }) => {
+test('Allow user administrators, failed', async ({ client }) => {
 
   const user = await User.find(enumUsersID.ADMIN);
   // console.log(await user.getRoles())

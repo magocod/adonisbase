@@ -6,8 +6,8 @@
  *
  */
 const enumUsersID = {
-    SUPER_USER: 1,
-    SUPER_USER_OTHER: 2,
+    ROOT: 1,
+    ROOT_OTHER: 2,
     ADMIN: 3,
     ADMIN_OTHER: 4,
     ADMIN_DISABLED: 5,

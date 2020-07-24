@@ -9,7 +9,7 @@ const enumUsersID = require('../../fixtures/user.enum');
 
 
 test('get current user jwt, success', async ({ client }) => {
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
   const userData = await User
 	.query()
 	.where('id', user.id)

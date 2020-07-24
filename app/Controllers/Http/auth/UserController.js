@@ -275,11 +275,11 @@ class UserController {
         return role.name;
       });
 
-      if (rolesName.includes('super_user')) {
+      if (rolesName.includes('root')) {
         // You do not have permission to edit this user
         return response.status(403).json({
           message: 'No tienes permiso para editar este usuario',
-          details: "Solo un superusuario se puede modificar a si mismo",
+          details: "Solo un usuario root se puede modificar a si mismo",
           err_message: ""
         });
       }
@@ -338,11 +338,11 @@ class UserController {
         return role.name;
       });
 
-      if (rolesName.includes('super_user')) {
+      if (rolesName.includes('root')) {
         // Cannot delete superusers with http queries
         return response.status(403).json({
           message: 'No tienes permiso para eliminar este usuario',
-          details: "No se pueden eliminar superusuarios con consultas http",
+          details: "No se pueden eliminar usuarios root con consultas http",
           err_message: ""
         });
       }

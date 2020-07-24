@@ -21,7 +21,7 @@ test('update a user, success', async ({ client, assert }) => {
     last_name: "change_s",
   };
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
   const userToUpdate = await User.create({
     username: 'user_u',
     first_name: 'user_f_u',
@@ -71,7 +71,7 @@ test('check user edit form', async ({ client, assert }) => {
 
   const validation = await validateAll(request, User.update_rules);
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
   const userToUpdate = await User.create({
     username: 'user_u',
     first_name: 'user_f_u',
@@ -111,16 +111,16 @@ test('check user edit form', async ({ client, assert }) => {
 
 })
 
-test("can't edit superusers", async ({ client, assert }) => {
+test("can't edit root users", async ({ client, assert }) => {
 
   const request = {
-    username: 'editet_super_user',
+    username: 'edited_root_user',
     email: "userupdated@mail.com",
     first_name: 'name',
     last_name: 'other_name',
   };
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
   const userToUpdate = await User.create({
     username: 'user_u',
     first_name: 'user_f_u',
@@ -128,10 +128,10 @@ test("can't edit superusers", async ({ client, assert }) => {
     email: 'useroriginal@mail.com',
     status: true,
     is_active: true,
-    role_id: enumRolesID.SUPER_USER,
+    role_id: enumRolesID.ROOT,
     password: '123'
   });
-  await userToUpdate.roles().attach([enumRolesID.SUPER_USER])
+  await userToUpdate.roles().attach([enumRolesID.ROOT])
   const usersInDb = await User.getCount();
 
   const response = await client.put(`/api/users/${userToUpdate.id}`)
@@ -147,7 +147,7 @@ test("can't edit superusers", async ({ client, assert }) => {
 
   response.assertJSON({
     message: 'No tienes permiso para editar este usuario',
-    details: "Solo un superusuario se puede modificar a si mismo",
+    details: "Solo un usuario root se puede modificar a si mismo",
     err_message: ""
   })
 

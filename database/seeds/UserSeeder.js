@@ -23,8 +23,8 @@ class UserSeeder {
   	// roles
 
   	const superUserRole = await Role.create({
-  		name: 'super_user',
-  		slug: 'super_user',
+  		name: 'root',
+  		slug: 'root',
   		description: 'Posee todos los permisos'
   	});
 
@@ -43,10 +43,10 @@ class UserSeeder {
     // users
 
   	const superUser = await User.create({
-      username: 'super_user',
-  		first_name: 'Super',
-	    last_name: 'User',
-	    email: 'superuser@mail.com',
+      username: 'root',
+  		first_name: 'root',
+	    last_name: 'root',
+	    email: 'root@mail.com',
 	    status: true,
 	    is_active: true,
 	    role_id: superUserRole.id,

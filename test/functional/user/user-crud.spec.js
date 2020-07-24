@@ -31,7 +31,7 @@ test('create a user', async ({ client, assert }) => {
     // hello: "",
   };
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
   const usersInDb = await User.getCount();
 
   const response = await client.post('/api/users')
@@ -73,7 +73,7 @@ test('create user with wrong role, must be between 2 - 3, error', async ({ clien
 
   const validation = await validateAll(request, rules);
   // console.log(validation.messages())
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
   const usersInDb = await User.getCount();
 
   const response = await client.post('/api/users')
@@ -105,7 +105,7 @@ test('all incorrect user parameters, error', async ({ client, assert }) => {
 
   const validation = await validateAll(request, rules);
   // console.log(validation.messages())
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
   const usersInDb = await User.getCount();
 
   const response = await client.post('/api/users')
@@ -126,14 +126,14 @@ test('all incorrect user parameters, error', async ({ client, assert }) => {
 
 test('Get a user by id, success', async ({ client, assert }) => {
 
-  // const user = await User.find(enumUsersID.SUPER_USER);
+  // const user = await User.find(enumUsersID.ROOT);
   const user = await User
   .query()
-  .where('id', enumUsersID.SUPER_USER)
+  .where('id', enumUsersID.ROOT)
   .hasProfile()
   .first();
 
-  const response = await client.get(`/api/users/${enumUsersID.SUPER_USER}`)
+  const response = await client.get(`/api/users/${enumUsersID.ROOT}`)
   .loginVia(user, 'jwt')
   .end();
 
@@ -148,7 +148,7 @@ test('Get a user by id, success', async ({ client, assert }) => {
 
 test('Get a user by id, parameter in invalid url, error', async ({ client, assert }) => {
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
 
   const response = await client.get(`/api/users/${null}`)
   .loginVia(user, 'jwt')
@@ -164,7 +164,7 @@ test('Get a user by id, parameter in invalid url, error', async ({ client, asser
 
 test('Get a user by id, letter parameter in url, error', async ({ client, assert }) => {
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
 
   const response = await client.get('/api/users/hola')
   .loginVia(user, 'jwt')

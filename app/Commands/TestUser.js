@@ -30,8 +30,8 @@ class TestUser extends Command {
     // roles
 
     const superUserRole = await Role.create({
-      name: 'super_user',
-      slug: 'super_user',
+      name: 'root',
+      slug: 'root',
       description: 'Posee todos los permisos'
     });
 
@@ -50,22 +50,22 @@ class TestUser extends Command {
     // users
     
     const users = [
-      // super users
+      // root users
       {
-        username: 'super_user',
-        first_name: 'Super',
-        last_name: 'User',
-        email: 'superuser@mail.com',
+        username: 'root',
+        first_name: 'Root',
+        last_name: 'root',
+        email: 'root@mail.com',
         status: true,
         is_active: true,
         role_id: superUserRole.id,
         password: '123'
       },
       {
-        username: 'super_user_2',
-        first_name: 'Super_2',
-        last_name: 'User_2',
-        email: 'superuser2@mail.com',
+        username: 'root_2',
+        first_name: 'Root_2',
+        last_name: 'Root_2',
+        email: 'root2@mail.com',
         status: true,
         is_active: true,
         role_id: superUserRole.id,

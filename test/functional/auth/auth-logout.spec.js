@@ -9,7 +9,7 @@ const enumUsersID = require('../../fixtures/user.enum');
 
 test('close user session, success', async ({ client }) => {
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
   const response = await client.get('/api/auth/logout').loginVia(user, 'jwt').end();
 
   // console.log(response);

@@ -19,10 +19,10 @@ const authRulesMessages = {
     'password.string': 'La contraseña debe ser una cadena de caracteres',
 }
 
-test('Super user login successful', async ({ client, assert }) => {
+test('Root user login successful', async ({ client, assert }) => {
 
 	const authData = {
-		email: 'superuser@mail.com',
+		email: 'root@mail.com',
 		password: '123'
 	};
 

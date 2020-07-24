@@ -31,7 +31,7 @@ test('the user modifies his password, success', async ({ client, assert }) => {
 		new_password: '1234'
 	};
 
-	const user = await User.find(enumUsersID.SUPER_USER);
+	const user = await User.find(enumUsersID.ROOT);
 
 	const response = await client.post('/api/auth/change_password')
 	.loginVia(user, 'jwt')
@@ -71,7 +71,7 @@ test('wrong current password, error', async ({ client, assert }) => {
     new_password: '1234'
   };
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
 
   const response = await client.post('/api/auth/change_password')
   .loginVia(user, 'jwt')
@@ -118,7 +118,7 @@ test('passwords in invalid format, error', async ({ client, assert }) => {
     new_password: 10
   };
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
 
   const validation = await validateAll(request, passwordRules, passwordMessages);
 

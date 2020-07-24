@@ -11,9 +11,9 @@ const enumUsersID = require('../../fixtures/user.enum');
 
 const PaginationPageSize = parseInt(Env.get('PAGINATION_PAGE_SIZE'));
 
-test('Get all users success, route: GET /api/users', async ({ client }) => {
+test('Get all users, success', async ({ client }) => {
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
   const users = await User
   .query()
   .hasProfile()
@@ -30,14 +30,14 @@ test('Get all users success, route: GET /api/users', async ({ client }) => {
 
 })
 
-test('Get all paginate users success, route: GET /api/user/all/?page', async ({ client }) => {
+test('Get all paginate users, success', async ({ client }) => {
 
   const pagination = {
     page: 1,
     per_page: PaginationPageSize,
   };
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
   const users = await User
   .query()
   .hasProfile()

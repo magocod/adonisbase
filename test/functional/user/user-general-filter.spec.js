@@ -23,7 +23,7 @@ test('Returns everything if it does not receive parameters', async ({ client }) 
 
   const request = {};
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
   const users = await User
   .query()
   .hasProfile()
@@ -58,7 +58,7 @@ test('allow null parameters', async ({ client }) => {
     email: null,
   };
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
   const users = await User
   .query()
   .hasProfile()
@@ -107,7 +107,7 @@ test('if you receive parameters they must be valid', async ({ client }) => {
 
   const validation = await validateAll(request, rules, messages);
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
 
   const response = await client.post(`/api/user/filter/${pagination.page}`)
   .loginVia(user, 'jwt')
@@ -131,12 +131,12 @@ test('Filter all users by first_name success', async ({ client }) => {
   };
 
   const request = {
-    first_name: 'super',
+    first_name: 'root',
     last_name: '',
     email: '',
   };
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
   const users = await User
   .query()
   .where('first_name', 'LIKE', '%' + request.first_name + '%')
@@ -172,7 +172,7 @@ test('Filter all users by last_name success', async ({ client }) => {
     email: '',
   };
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
   const users = await User
   .query()
   .where('last_name', 'LIKE', '%' + request.last_name + '%')
@@ -208,7 +208,7 @@ test('Filter all users by email success', async ({ client }) => {
     email: 'superuser2@mail'
   };
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
   const users = await User
   .query()
   .where('email', 'LIKE', '%' + request.email + '%')
@@ -241,12 +241,12 @@ test(
   };
 
   const request = {
-    first_name: 'Super',
+    first_name: 'Root',
     last_name: 'User',
     email: '',
   };
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
   const users = await User
   .query()
   .where('first_name', 'LIKE', '%' + request.first_name + '%')
@@ -285,7 +285,7 @@ test(
     email: 'mail.com',
   };
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
   const users = await User
   .query()
   .where('first_name', 'LIKE', '%' + request.first_name + '%')
@@ -324,7 +324,7 @@ test(
     email: 'user',
   };
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
   const users = await User
   .query()
   .where('last_name', 'LIKE', '%' + request.last_name + '%')
@@ -363,7 +363,7 @@ test(
     email: 'mail.',
   };
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
   const users = await User
   .query()
   .where('first_name', 'LIKE', '%' + request.first_name + '%')

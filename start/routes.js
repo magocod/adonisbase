@@ -32,18 +32,18 @@ Route.group(() => {
   Route.get('all/:page?', 'auth/UserController.indexPaginate');
   Route.post('filter/:page?', 'auth/UserController.indexFilter');
 }).prefix('api/user').middleware(
-  ['auth:jwt', 'isin:super_user,admin']
+  ['auth:jwt', 'isin:root,admin']
 );
 Route.resource('api/users', 'auth/UserController').apiOnly().middleware(
-  ['auth:jwt', 'isin:super_user,admin']
+  ['auth:jwt', 'isin:root,admin']
 );
 
 // roles
 Route.resource('api/roles', 'auth/RoleController').apiOnly().middleware(
-  ['auth:jwt', "isin:super_user,admin"]
+  ['auth:jwt', "isin:root,admin"]
 );
 
 // permissions
 Route.resource('api/permissions', 'auth/PermissionController').apiOnly().middleware(
-  ['auth:jwt', "is:super_user, admin"]
+  ['auth:jwt', "is:root, admin"]
 );

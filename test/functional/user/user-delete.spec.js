@@ -12,7 +12,7 @@ const enumRolesID = require('../../fixtures/role.enum');
 
 test('delete a user, success', async ({ client, assert }) => {
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
   const userToDelete = await User.create({
     username: 'user_delete',
     first_name: 'user_delete',
@@ -44,7 +44,7 @@ test('delete a user, success', async ({ client, assert }) => {
 
 test('The user cannot be deleted by himself', async ({ client, assert }) => {
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
   const usersInDb = await User.getCount();
 
   const response = await client.delete(`/api/users/${user.id}`)
@@ -64,9 +64,9 @@ test('The user cannot be deleted by himself', async ({ client, assert }) => {
 
 })
 
-test('Cannot delete superusers with http queries', async ({ client, assert }) => {
+test('Cannot delete root users with http queries', async ({ client, assert }) => {
 
-  const user = await User.find(enumUsersID.SUPER_USER);
+  const user = await User.find(enumUsersID.ROOT);
   const userToDelete = await User.create({
     username: 'user_delete',
     first_name: 'user_delete',
@@ -74,10 +74,10 @@ test('Cannot delete superusers with http queries', async ({ client, assert }) =>
     email: 'userdelete@mail.com',
     status: true,
     is_active: true,
-    role_id: enumRolesID.SUPER_USER,
+    role_id: enumRolesID.ROOT,
     password: '123'
   });
-  await userToDelete.roles().attach([enumRolesID.SUPER_USER])
+  await userToDelete.roles().attach([enumRolesID.ROOT])
   const usersInDb = await User.getCount();
 
   const response = await client.delete(`/api/users/${userToDelete.id}`)
@@ -88,7 +88,7 @@ test('Cannot delete superusers with http queries', async ({ client, assert }) =>
 
   response.assertJSON({
     message: 'No tienes permiso para eliminar este usuario',
-    details: "No se pueden eliminar superusuarios con consultas http",
+    details: "No se pueden eliminar usuarios root con consultas http",
     err_message: ""
   })
 
