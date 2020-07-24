@@ -29,6 +29,7 @@ Route.group(() => {
 
 // users
 Route.group(() => {
+  Route.put('update_password/:user_id', 'auth/PasswordController.updatePassword');
   Route.get('all/:page?', 'auth/UserController.indexPaginate');
   Route.post('filter/:page?', 'auth/UserController.indexFilter');
 }).prefix('api/user').middleware(

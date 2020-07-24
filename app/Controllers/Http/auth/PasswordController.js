@@ -1,6 +1,6 @@
 'use strict'
 
-// const User = use('App/Models/User');
+const User = use('App/Models/User');
 // const Role = use('Adonis/Acl/Role');
 
 const Hash = use('Hash');
@@ -79,6 +79,72 @@ class PasswordController {
         message: 'Error modificando contraseña',
         details: "",
         err_message: error.message
+      });
+    }
+  }
+
+  /**
+   * [updatePassword description]
+   *
+   * user password modified by id (per user with higher hierarchy)
+   *
+   * @param  {[type]} options.params   [description]
+   * @param  {[type]} options.request [description]
+   * @param  {[type]} options.response [description]
+   * @return {[type]}                  [description]
+   */
+  async updatePassword({ params, request, response }) {
+    try {
+      // console.log(params);
+      const userInstance = await User.findOrFail(params.user_id);
+
+      const roles = await userInstance.roles().fetch();
+      const rolesName = await roles.toJSON().map((role) => {
+        return role.name;
+      });
+
+      if (rolesName.includes('root')) {
+        // You do not have permission to edit this user
+        return response.status(403).json({
+          message: 'No tienes permiso para editar este usuario',
+          details: "Solo un usuario root se puede modificar a si mismo",
+          err_message: ""
+        });
+      }
+
+      const rules = {
+        password: "required|string"
+      };
+
+      const messages = {
+        'password.required': 'La contraseña es requerida',
+        'password.string': 'La contraseña debe ser una cadena de caracteres',
+      };
+
+      const validation = await validateAll(request.all(), rules, messages);
+
+      if (validation.fails()) {
+        return response.status(422).json({
+          errors: validation.messages()
+        });
+      }
+
+      const { password } = request.all();
+
+      userInstance.password = password;
+      await userInstance.save();
+
+      return response.status(200).json({
+        message: 'Contraseña modificada',
+        data: null
+      });
+    } catch (error) {
+      return response.status(error.status === undefined ? 400 : error.status).json({
+        error: {
+          message: "Error modificando contraseña",
+          details: "",
+          err_message: error.message
+        }
       });
     }
   }
