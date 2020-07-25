@@ -46,5 +46,5 @@ Route.resource('api/roles', 'auth/RoleController').apiOnly().middleware(
 
 // permissions
 Route.resource('api/permissions', 'auth/PermissionController').apiOnly().middleware(
-  ['auth:jwt', "is:root, admin"]
+  ['auth:jwt', "isin:root,admin"]
 );

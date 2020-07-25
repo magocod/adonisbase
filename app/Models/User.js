@@ -47,12 +47,13 @@ class User extends Model {
 
   /**
    * [update_rules description]
-   * @return {Object} [description]
+   * @param  {Boolean} strict [description]
+   * @return {[type]}         [description]
    */
   static get update_rules() {
     return {
-      username: "required|string|unique:users",
-      email: "required|email|unique:users",
+      username: "required|string|unique:users,username",
+      email: "required|email|unique:users,email",
       first_name: "required|string",
       last_name: "required|string",
       // role_id: "required|range:1,4"
@@ -69,6 +70,28 @@ class User extends Model {
    */
   static scopeHasProfile(query) {
     return query.with('roles').with('permissions');
+  }
+
+  /**
+   * [rules description]
+   * @return {Object} [description]
+   */
+  static rules(userId = 0) {
+    // console.log(userId);
+    if (userId === 0) {
+      return {
+        username: "required|string|unique:users,username",
+        email: "required|email|unique:users,email",
+        first_name: "required|string",
+        last_name: "required|string",
+      };
+    }
+    return {
+      username: `required|string|unique:users,username,id,${userId}`,
+      email: `required|email|unique:users,email,id,${userId}`,
+      first_name: "required|string",
+      last_name: "required|string"
+    };
   }
 
   /**

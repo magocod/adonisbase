@@ -1,6 +1,6 @@
 'use strict'
 
-const { test, trait } = use('Test/Suite')('User Crud, auth/UserController')
+const { test, trait } = use('Test/Suite')('User Create, auth/UserController')
 trait('Test/ApiClient')
 trait('Auth/Client')
 trait('DatabaseTransactions')
@@ -18,6 +18,7 @@ const rules = {
 };
 
 const enumUsersID = require('../../fixtures/user.enum');
+const enumRolesID = require('../../fixtures/role.enum');
 
 test('create a user', async ({ client, assert }) => {
 
@@ -124,53 +125,45 @@ test('all incorrect user parameters, error', async ({ client, assert }) => {
 
 })
 
-test('Get a user by id, success', async ({ client, assert }) => {
+test('email and unique username validation, error', async ({ client, assert }) => {
 
-  // const user = await User.find(enumUsersID.ROOT);
-  const user = await User
-  .query()
-  .where('id', enumUsersID.ROOT)
-  .hasProfile()
-  .first();
+  const request = {
+    username: 'unique',
+    email: "unique@mail.com",
+    password: '123',
+    first_name: 'unique',
+    last_name: 'user',
+    role_id: enumRolesID.USER,
+  };
+  const userExist = await User.create({
+    username: 'unique',
+    first_name: 'unique',
+    last_name: 'User',
+    email: 'unique@mail.com',
+    status: true,
+    is_active: true,
+    role_id: enumRolesID.USER,
+    password: '123'
+  });
+  await userExist.roles().attach([enumRolesID.USER])
 
-  const response = await client.get(`/api/users/${enumUsersID.ROOT}`)
+  const validation = await validateAll(request, rules);
+  // console.log(validation.messages())
+  const user = await User.find(enumUsersID.ROOT);
+  const usersInDb = await User.getCount();
+
+  const response = await client.post('/api/users')
   .loginVia(user, 'jwt')
+  .send(request)
   .end();
 
   // console.log(response);
-  response.assertStatus(200);
+  // console.log(usersInDb, await User.getCount());
+  response.assertStatus(422);
   response.assertJSON({
-    message: 'Operacion exitosa',
-    data: user.toJSON(),
+    errors: validation.messages()
   });
 
-})
-
-test('Get a user by id, parameter in invalid url, error', async ({ client, assert }) => {
-
-  const user = await User.find(enumUsersID.ROOT);
-
-  const response = await client.get(`/api/users/${null}`)
-  .loginVia(user, 'jwt')
-  .end();
-
-  // console.log(response.body);
-  response.assertStatus(404);
-
-  assert.equal(response.body.error.message, 'Error buscando usuario');
-  assert.equal(response.body.error.details, '');
-
-})
-
-test('Get a user by id, letter parameter in url, error', async ({ client, assert }) => {
-
-  const user = await User.find(enumUsersID.ROOT);
-
-  const response = await client.get('/api/users/hola')
-  .loginVia(user, 'jwt')
-  .end();
-
-  // console.log(response.body);
-  response.assertStatus(404);
+  assert.equal(usersInDb, await User.getCount());
 
 })

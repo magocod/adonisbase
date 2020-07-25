@@ -162,3 +162,108 @@ test("can't edit root users", async ({ client, assert }) => {
   assert.equal(usersInDb, await User.getCount());
 
 })
+
+test('email and unique username validation, error', async ({ client, assert }) => {
+
+  const request = {
+    username: 'unique',
+    email: "unique@mail.com",
+    first_name: 'unique',
+    last_name: 'user',
+  };
+  const userExist = await User.create({
+    username: 'unique',
+    first_name: 'unique',
+    last_name: 'user',
+    email: 'unique@mail.com',
+    status: true,
+    is_active: true,
+    role_id: enumRolesID.USER,
+    password: '123'
+  });
+  await userExist.roles().attach([enumRolesID.USER])
+
+  const userToUpdate = await User.create({
+    username: 'user_u',
+    first_name: 'user_f_u',
+    last_name: 'user_s_u',
+    email: 'useroriginal@mail.com',
+    status: true,
+    is_active: true,
+    role_id: enumRolesID.USER,
+    password: '123'
+  });
+  await userToUpdate.roles().attach([enumRolesID.USER])
+
+  const validation = await validateAll(request, User.rules(userToUpdate.id));
+  // console.log(validation.messages())
+  const user = await User.find(enumUsersID.ROOT);
+  const usersInDb = await User.getCount();
+
+  const response = await client.put(`/api/users/${userToUpdate.id}`)
+  .loginVia(user, 'jwt')
+  .send(request)
+  .end();
+
+  // console.log(response);
+  // console.log(usersInDb, await User.getCount());
+  response.assertStatus(422);
+  response.assertJSON({
+    errors: validation.messages()
+  });
+
+  assert.equal(usersInDb, await User.getCount());
+
+})
+
+test('allow the update of unique fields, if they are the same in the user, success', async ({ client, assert }) => {
+
+  const request = {
+    username: 'unique',
+    email: "unique@mail.com",
+    first_name: 'new name',
+    last_name: 'new last name',
+  };
+  const userExist = await User.create({
+    username: 'unique',
+    first_name: 'unique',
+    last_name: 'user',
+    email: 'unique@mail.com',
+    status: true,
+    is_active: true,
+    role_id: enumRolesID.USER,
+    password: '123'
+  });
+  await userExist.roles().attach([enumRolesID.USER])
+
+  const validation = await validateAll(request, User.rules(userExist.id));
+  // console.log(validation.messages())
+  const user = await User.find(enumUsersID.ROOT);
+  const usersInDb = await User.getCount();
+
+  const response = await client.put(`/api/users/${userExist.id}`)
+  .loginVia(user, 'jwt')
+  .send(request)
+  .end();
+
+  const userUpdated = await User
+  .query()
+  .where('id', response.body.data.id)
+  .hasProfile()
+  .first();
+
+  // console.log(response);
+  // console.log(userExist.toJSON());
+  // console.log(response.body.data);
+  // console.log(userUpdated.toJSON());
+  // console.log(usersInDb, await User.getCount());
+  response.assertStatus(200);
+
+  response.assertJSON({
+    message: 'Usuario modificado',
+    data: userUpdated.toJSON()
+  })
+
+  assert.equal(usersInDb, await User.getCount());
+
+})
