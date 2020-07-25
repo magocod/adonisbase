@@ -2,10 +2,13 @@
 
 const { test, trait } = use('Test/Suite')('Auth Login, auth/AuthController')
 trait('Test/ApiClient')
+trait('DatabaseTransactions')
 
 const User = use('App/Models/User');
 
 const { validateAll } = use("Validator");
+
+const enumRolesID = require('../../fixtures/role.enum');
 
 const authRules = {
     email: "required|email",
@@ -91,6 +94,38 @@ test('User not found, error', async ({ client, assert }) => {
   response.assertStatus(404);
 
   assert.equal(response.body.error.message, 'Usuario no existe');
+  assert.equal(response.body.error.details, '');
+
+})
+
+test('User is disabled, error', async ({ client, assert }) => {
+
+  const authData = {
+    email: 'disabled@mail.com',
+    password: '123'
+  };
+
+  const user = await User.create({
+    username: 'user_d',
+    first_name: 'user_d',
+    last_name: 'user_d',
+    email: authData.email,
+    status: false,
+    is_active: false,
+    role_id: enumRolesID.USER,
+    password: authData.password
+  });
+  await user.roles().attach([enumRolesID.USER])
+
+  const response = await client.post('/api/auth/login').send(authData).end();
+
+  // console.log(response);
+  response.assertStatus(403);
+
+  assert.equal(
+    response.body.error.message,
+    'No puedes ingresar en este momentos, usuario desactivado'
+  );
   assert.equal(response.body.error.details, '');
 
 })

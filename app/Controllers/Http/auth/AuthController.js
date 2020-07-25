@@ -44,20 +44,21 @@ class AuthController {
 
       const user = await User.findByOrFail('email', email);
 
-      if (user === null) {
-        return response.status(404).json({
-          error: {
-            message: 'Usuario no existe',
-            details: "",
-            err_message: ""
-          }
-        });
-      }
+      // I don't know how to fall in this line
+      // if (user === null) {
+      //   return response.status(404).json({
+      //     error: {
+      //       message: 'Usuario no existe',
+      //       details: "",
+      //       err_message: ""
+      //     }
+      //   });
+      // }
 
-      if (user.status === false) {
+      if (user.status == false) {
         return response.status(403).json({
           error: {
-            message: 'No puedes ingresar en este momentos, porfavor valida tu cuenta',
+            message: 'No puedes ingresar en este momentos, usuario desactivado',
             details: "",
             err_message: ""
           }
@@ -128,7 +129,7 @@ class AuthController {
    * [currentUser description]
    * @param  {[type]} options.auth     [description]
    * @param  {[type]} options.response [description]
-   * @return {[type]}                  [description]
+   * @return {Response}                  [description]
    */
   async currentUser({ auth, response }) {
     try {
@@ -147,6 +148,74 @@ class AuthController {
         error.status === undefined ? 400 : error.status
       ).json({
         message: 'Error recuperando usuario',
+        details: "",
+        err_message: error.message
+      });
+    }
+  }
+
+  /**
+   * [updateProfile description]
+   * @param  {[type]} options.auth     [description]
+   * @param  {[type]} options.request  [description]
+   * @param  {[type]} options.response [description]
+   * @return {Response}                  [description]
+   */
+  async updateProfile({ auth, request, response }) {
+    try {
+      const user = await auth.getUser();
+
+      const rules = {
+        username: `required|string|unique:users,username,id,${user.id}`,
+        email: `required|email|unique:users,email,id,${user.id}`,
+        first_name: "required|string",
+        last_name: "required|string"
+      };
+
+      const messages = {
+        'username.required': 'El nombre de usuario es requerido',
+        'username.string': 'El nombre de usuario debe ser una cadena de caracteres',
+        'username.unique': 'Este nombre de usuario se encuentra registrado en el sistema',
+        'email.required': 'El correo electronico es requerido',
+        'email.email': 'Por favor ingresar un correo electronico valido',
+        'email.unique': 'Este correo electronico se encuentra registrado en el sistema',
+        'first_name.required': 'El primer nombre es requerido',
+        'first_name.string': 'El primer nombre debe ser una cadena de caracteres',
+        'last_name.required': 'El segundo nombre es requerido',
+        'last_name.string': 'El segundo nombre debe ser una cadena de caracteres',
+      }
+
+      const validation = await validateAll(request.all(), rules, messages);
+
+      if (validation.fails()) {
+        return response.status(422).json({
+          errors: validation.messages()
+        });
+      }
+
+      const userData = request.all();
+
+      user.username = userData.username;
+      user.email = userData.email;
+      user.first_name = userData.first_name;
+      user.last_name = userData.last_name;
+      await user.save();
+
+      const userResponse = await User
+      .query()
+      .where('id', user.id)
+      .hasProfile()
+      .first();
+
+      return response.status(200).json({
+        message: "Perfil de usuario actualizado",
+        data: userResponse
+      });
+    } catch (error) {
+      return response.status(
+        error.status === undefined ? 400 : error.status
+      ).json({
+        message: 'Error actualizando perfil de usuario',
         details: "",
         err_message: error.message
       });

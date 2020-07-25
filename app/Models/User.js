@@ -121,6 +121,18 @@ class User extends Model {
   tokens () {
     return this.hasMany('App/Models/Token')
   }
+
+  /**
+   * [role description]
+   *
+   * skip the many-to-many relationship and assign a single role to the user
+   * 
+   * @return {[type]} [description]
+   */
+  // role() {
+  //   return this.belongsTo('Adonis/Acl/Role', 'role');
+  // }
+
 }
 
 module.exports = User

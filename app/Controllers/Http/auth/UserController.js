@@ -291,7 +291,7 @@ class UserController {
         });
       }
 
-      userInstance.username = userData.name;
+      userInstance.username = userData.username;
       userInstance.email = userData.email;
       userInstance.first_name = userData.first_name;
       userInstance.last_name = userData.last_name;
