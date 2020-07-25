@@ -7,6 +7,11 @@ const Model = use('Model')
 const Hash = use('Hash')
 
 class User extends Model {
+
+  /**
+   * [boot description]
+   * @return {void} [description]
+   */
   static boot () {
     super.boot()
 
@@ -21,10 +26,18 @@ class User extends Model {
     })
   }
 
+  /**
+   * [hidden description]
+   * @return {string[]} [description]
+   */
   static get hidden() {
     return ['is_active', 'password']
   }
 
+  /**
+   * [traits description]
+   * @return {string[]} [description]
+   */
   static get traits() {
     return [
       '@provider:Adonis/Acl/HasRole',
@@ -46,8 +59,30 @@ class User extends Model {
     };
   }
 
+  /**
+   * [scopeHasProfile description]
+   *
+   * the user loads all their db relationships
+   *
+   * @param  {[type]} query [description]
+   * @return {[type]}       [description]
+   */
   static scopeHasProfile(query) {
     return query.with('roles').with('permissions');
+  }
+
+  /**
+   * [getRolesSlug description]
+   *
+   * get all current user roles (slug)
+   *
+   * @return {string[]} [description]
+   */
+  async getRolesSlug() {
+    const roles = await this.roles().fetch().toJSON();
+    return roles.map((role) => {
+      return role.slug;
+    })
   }
 
   /**
