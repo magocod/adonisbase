@@ -30,7 +30,7 @@ test('Returns everything if it does not receive parameters', async ({ client }) 
   .paginate(pagination.page, pagination.per_page);
 
   const response = await client.post(`/api/user/filter/${pagination.page}`)
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
 
@@ -65,7 +65,7 @@ test('allow null parameters', async ({ client }) => {
   .paginate(pagination.page, pagination.per_page);
 
   const response = await client.post(`/api/user/filter/${pagination.page}`)
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
 
@@ -110,7 +110,7 @@ test('if you receive parameters they must be valid', async ({ client }) => {
   const user = await User.find(enumUsersID.ROOT);
 
   const response = await client.post(`/api/user/filter/${pagination.page}`)
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
 
@@ -144,7 +144,7 @@ test('Filter all users by first_name success', async ({ client }) => {
   .paginate(pagination.page, pagination.per_page);
 
   const response = await client.post(`/api/user/filter/${pagination.page}`)
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
 
@@ -180,7 +180,7 @@ test('Filter all users by last_name success', async ({ client }) => {
   .paginate(pagination.page, pagination.per_page);
 
   const response = await client.post(`/api/user/filter/${pagination.page}`)
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
 
@@ -216,7 +216,7 @@ test('Filter all users by email success', async ({ client }) => {
   .paginate(pagination.page, pagination.per_page);
 
   const response = await client.post(`/api/user/filter/${pagination.page}`)
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
 
@@ -255,7 +255,7 @@ test(
   .paginate(pagination.page, pagination.per_page);
 
   const response = await client.post(`/api/user/filter/${pagination.page}`)
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
 
@@ -294,7 +294,7 @@ test(
   .paginate(pagination.page, pagination.per_page);
 
   const response = await client.post(`/api/user/filter/${pagination.page}`)
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
 
@@ -333,7 +333,7 @@ test(
   .paginate(pagination.page, pagination.per_page);
 
   const response = await client.post(`/api/user/filter/${pagination.page}`)
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
 
@@ -373,7 +373,7 @@ test(
   .paginate(pagination.page, pagination.per_page);
 
   const response = await client.post(`/api/user/filter/${pagination.page}`)
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
 

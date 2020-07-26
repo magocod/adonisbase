@@ -18,7 +18,7 @@ test('Get a user by id, success', async ({ client, assert }) => {
   .first();
 
   const response = await client.get(`/api/users/${enumUsersID.ROOT}`)
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .end();
 
   // console.log(response);
@@ -35,7 +35,7 @@ test('Get a user by id, parameter in invalid url, error', async ({ client, asser
   const user = await User.find(enumUsersID.ROOT);
 
   const response = await client.get(`/api/users/${null}`)
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .end();
 
   // console.log(response.body);
@@ -51,7 +51,7 @@ test('Get a user by id, letter parameter in url, error', async ({ client, assert
   const user = await User.find(enumUsersID.ROOT);
 
   const response = await client.get('/api/users/hola')
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .end();
 
   // console.log(response.body);

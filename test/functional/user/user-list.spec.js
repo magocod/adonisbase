@@ -18,7 +18,7 @@ test('Get all users, success', async ({ client }) => {
   .query()
   .hasProfile()
   .fetch();
-  const response = await client.get('/api/users').loginVia(user, 'jwt').end();
+  const response = await client.get('/api/users').loginVia(user).end();
 
   // console.log(response.body);
   response.assertStatus(200);
@@ -43,7 +43,7 @@ test('Get all paginate users, success', async ({ client }) => {
   .hasProfile()
   .paginate(pagination.page, pagination.per_page);
 
-  const response = await client.get(`/api/user/all/${pagination.page}`).loginVia(user, 'jwt').end();
+  const response = await client.get(`/api/user/all/${pagination.page}`).loginVia(user).end();
 
   // console.log(response.body.data);
   response.assertStatus(200);

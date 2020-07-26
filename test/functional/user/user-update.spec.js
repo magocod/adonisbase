@@ -36,7 +36,7 @@ test('update a user, success', async ({ client, assert }) => {
   const usersInDb = await User.getCount();
 
   const response = await client.put(`/api/users/${userToUpdate.id}`)
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
 
@@ -86,7 +86,7 @@ test('check user edit form', async ({ client, assert }) => {
   const usersInDb = await User.getCount();
 
   const response = await client.put(`/api/users/${userToUpdate.id}`)
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
 
@@ -135,7 +135,7 @@ test("can't edit root users", async ({ client, assert }) => {
   const usersInDb = await User.getCount();
 
   const response = await client.put(`/api/users/${userToUpdate.id}`)
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
 
@@ -201,7 +201,7 @@ test('email and unique username validation, error', async ({ client, assert }) =
   const usersInDb = await User.getCount();
 
   const response = await client.put(`/api/users/${userToUpdate.id}`)
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
 
@@ -242,7 +242,7 @@ test('allow the update of unique fields, if they are the same in the user, succe
   const usersInDb = await User.getCount();
 
   const response = await client.put(`/api/users/${userExist.id}`)
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
 

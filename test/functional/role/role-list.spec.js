@@ -13,7 +13,7 @@ test('Get all roles, success', async ({ client }) => {
 
   const user = await User.find(enumUsersID.ROOT);
   const roles = await Role.all();
-  const response = await client.get('/api/roles').loginVia(user, 'jwt').end();
+  const response = await client.get('/api/roles').loginVia(user).end();
 
   // console.log(response);
   response.assertStatus(200);
@@ -31,7 +31,7 @@ test('Root or administrator credentials required, failed', async ({ client }) =>
   response.assertStatus(401);
 
   const user = await User.find(enumUsersID.USER);
-  response = await client.get('/api/roles').loginVia(user, 'jwt').end();
+  response = await client.get('/api/roles').loginVia(user).end();
   // console.log(response);
   response.assertStatus(403);
 
@@ -41,7 +41,7 @@ test('Allow user administrators, failed', async ({ client }) => {
 
   const user = await User.find(enumUsersID.ADMIN);
   // console.log(await user.getRoles())
-  const response = await client.get('/api/roles').loginVia(user, 'jwt').end();
+  const response = await client.get('/api/roles').loginVia(user).end();
   // console.log(response);
   response.assertStatus(200);
 

@@ -35,7 +35,7 @@ test('the user modifies his password, success', async ({ client, assert }) => {
 	const user = await User.find(enumUsersID.ROOT);
 
 	const response = await client.post('/api/auth/change_password')
-	.loginVia(user, 'jwt')
+	.loginVia(user)
 	.send(request)
 	.end();
 	await user.reload();
@@ -75,7 +75,7 @@ test('wrong current password, error', async ({ client, assert }) => {
   const user = await User.find(enumUsersID.ROOT);
 
   const response = await client.post('/api/auth/change_password')
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
   await user.reload();
@@ -118,7 +118,7 @@ test('passwords in invalid format, error', async ({ client, assert }) => {
   const validation = await validateAll(request, passwordRules, passwordMessages);
 
   const response = await client.post('/api/auth/change_password')
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
   await user.reload();
@@ -178,7 +178,7 @@ test('Validate form update user password, administrator, error', async ({ client
   const validation = await validateAll(request, rules, messages);
 
   const response = await client.put(`/api/user/update_password/${userToUpdate.id}`)
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
   await userToUpdate.reload();
@@ -238,7 +238,7 @@ test('update user password, administrator, success', async ({ client, assert }) 
   const validation = await validateAll(request, rules, messages);
 
   const response = await client.put(`/api/user/update_password/${userToUpdate.id}`)
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
   await userToUpdate.reload();
@@ -288,7 +288,7 @@ test('root user password, can only be modified by the same, administrator, succe
   await userToUpdate.roles().attach([enumRolesID.ROOT])
 
   const response = await client.put(`/api/user/update_password/${userToUpdate.id}`)
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
   await userToUpdate.reload();

@@ -36,7 +36,7 @@ test('create a user', async ({ client, assert }) => {
   const usersInDb = await User.getCount();
 
   const response = await client.post('/api/users')
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
 
@@ -78,7 +78,7 @@ test('create user with wrong role, must be between 2 - 3, error', async ({ clien
   const usersInDb = await User.getCount();
 
   const response = await client.post('/api/users')
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
 
@@ -110,7 +110,7 @@ test('all incorrect user parameters, error', async ({ client, assert }) => {
   const usersInDb = await User.getCount();
 
   const response = await client.post('/api/users')
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
 
@@ -153,7 +153,7 @@ test('email and unique username validation, error', async ({ client, assert }) =
   const usersInDb = await User.getCount();
 
   const response = await client.post('/api/users')
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
 

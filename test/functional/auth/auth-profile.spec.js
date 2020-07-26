@@ -24,14 +24,14 @@ const profileMessages = {
   'last_name.string': 'El segundo nombre debe ser una cadena de caracteres',
 }
 
-test('get current user jwt, success', async ({ client }) => {
+test('get current user, success', async ({ client }) => {
   const user = await User.find(enumUsersID.ROOT);
   const userData = await User
 	.query()
 	.where('id', user.id)
 	.hasProfile()
 	.first();
-  const response = await client.get('/api/auth/profile').loginVia(user, 'jwt').end();
+  const response = await client.get('/api/auth/profile').loginVia(user).end();
 
   // console.log(response.body);
   response.assertStatus(200);
@@ -42,7 +42,7 @@ test('get current user jwt, success', async ({ client }) => {
   })
 })
 
-test('The user updates their profile, jwt success', async ({ client, assert }) => {
+test('The user updates their profile, success', async ({ client, assert }) => {
 
   const request = {
     username: "user_change",
@@ -59,7 +59,7 @@ test('The user updates their profile, jwt success', async ({ client, assert }) =
   .first();
 
   const response = await client.post('/api/auth/profile')
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
 
@@ -88,7 +88,7 @@ test('The user updates their profile, jwt success', async ({ client, assert }) =
 
 })
 
-test('Verify form modify profile, jwt error', async ({ client, assert }) => {
+test('Verify form modify profile, error', async ({ client, assert }) => {
 
   const request = {
     username: "root_2", // exist in TestUser command
@@ -116,7 +116,7 @@ test('Verify form modify profile, jwt error', async ({ client, assert }) => {
   // console.log(validation.messages());
 
   const response = await client.post('/api/auth/profile')
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .send(request)
   .end();
 

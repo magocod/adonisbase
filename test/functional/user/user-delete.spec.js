@@ -27,7 +27,7 @@ test('delete a user, success', async ({ client, assert }) => {
   const usersInDb = await User.getCount();
 
   const response = await client.delete(`/api/users/${userToDelete.id}`)
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .end();
 
   response.assertStatus(200);
@@ -48,7 +48,7 @@ test('The user cannot be deleted by himself', async ({ client, assert }) => {
   const usersInDb = await User.getCount();
 
   const response = await client.delete(`/api/users/${user.id}`)
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .end();
 
   response.assertStatus(403);
@@ -81,7 +81,7 @@ test('Cannot delete root users with http queries', async ({ client, assert }) =>
   const usersInDb = await User.getCount();
 
   const response = await client.delete(`/api/users/${userToDelete.id}`)
-  .loginVia(user, 'jwt')
+  .loginVia(user)
   .end();
 
   response.assertStatus(403);
