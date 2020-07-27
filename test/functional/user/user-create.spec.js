@@ -6,16 +6,6 @@ trait('Auth/Client')
 trait('DatabaseTransactions')
 
 const User = use('App/Models/User');
-const { validateAll } = use("Validator");
-
-const rules = {
-  username: "required|string|unique:users",
-  email: "required|email|unique:users",
-  password: "required|string",
-  first_name: "required|string",
-  last_name: "required|string",
-  role_id: "required|range:1,4"
-};
 
 const enumUsersID = require('../../fixtures/user.enum');
 const enumRolesID = require('../../fixtures/role.enum');
@@ -72,7 +62,7 @@ test('create user with wrong role, must be between 2 - 3, error', async ({ clien
     role_id: 1,
   };
 
-  const validation = await validateAll(request, rules);
+  const validation = await User.validate(request);
   // console.log(validation.messages())
   const user = await User.find(enumUsersID.ROOT);
   const usersInDb = await User.getCount();
@@ -104,7 +94,7 @@ test('all incorrect user parameters, error', async ({ client, assert }) => {
     role_id: 4,
   };
 
-  const validation = await validateAll(request, rules);
+  const validation = await User.validate(request);
   // console.log(validation.messages())
   const user = await User.find(enumUsersID.ROOT);
   const usersInDb = await User.getCount();
@@ -147,8 +137,9 @@ test('email and unique username validation, error', async ({ client, assert }) =
   });
   await userExist.roles().attach([enumRolesID.USER])
 
-  const validation = await validateAll(request, rules);
+  const validation = await User.validate(request);
   // console.log(validation.messages())
+
   const user = await User.find(enumUsersID.ROOT);
   const usersInDb = await User.getCount();
 

@@ -5,8 +5,6 @@ trait('Test/ApiClient')
 trait('Auth/Client')
 trait('DatabaseTransactions')
 
-const { validateAll } = use("Validator");
-
 const User = use('App/Models/User');
 
 const enumUsersID = require('../../fixtures/user.enum');
@@ -69,8 +67,6 @@ test('check user edit form', async ({ client, assert }) => {
     last_name: [],
   };
 
-  const validation = await validateAll(request, User.update_rules);
-
   const user = await User.find(enumUsersID.ROOT);
   const userToUpdate = await User.create({
     username: 'user_u',
@@ -83,6 +79,9 @@ test('check user edit form', async ({ client, assert }) => {
     password: '123'
   });
   await userToUpdate.roles().attach([enumRolesID.USER])
+
+  const validation = await User.validate(request, userToUpdate.id);
+
   const usersInDb = await User.getCount();
 
   const response = await client.put(`/api/users/${userToUpdate.id}`)
@@ -195,8 +194,9 @@ test('email and unique username validation, error', async ({ client, assert }) =
   });
   await userToUpdate.roles().attach([enumRolesID.USER])
 
-  const validation = await validateAll(request, User.rules(userToUpdate.id));
+  const validation = await User.validate(request, userToUpdate.id);
   // console.log(validation.messages())
+
   const user = await User.find(enumUsersID.ROOT);
   const usersInDb = await User.getCount();
 
@@ -236,8 +236,9 @@ test('allow the update of unique fields, if they are the same in the user, succe
   });
   await userExist.roles().attach([enumRolesID.USER])
 
-  const validation = await validateAll(request, User.rules(userExist.id));
+  const validation = await User.validate(request, userExist.id);
   // console.log(validation.messages())
+
   const user = await User.find(enumUsersID.ROOT);
   const usersInDb = await User.getCount();
 

@@ -155,16 +155,8 @@ class UserController {
    */
   async store ({ request, response }) {
     try {
-      const rules = {
-        username: "required|string|unique:users",
-        email: "required|email|unique:users",
-        password: "required|string",
-        first_name: "required|string",
-        last_name: "required|string",
-        role_id: "required|range:1,4"
-      };
 
-      const validation = await validateAll(request.all(), rules);
+      const validation = await User.validate(request.all());
 
       if (validation.fails()) {
         return response.status(422).send({
@@ -251,14 +243,9 @@ class UserController {
   async update ({ params, request, response }) {
     try {
 
-      const rules = {
-        username: `required|string|unique:users,username,id,${params.id}`,
-        email: `required|email|unique:users,email,id,${params.id}`,
-        first_name: "required|string",
-        last_name: "required|string"
-      };
+      const userInstance = await User.findOrFail(params.id);
 
-      const validation = await validateAll(request.all(), rules);
+      const validation = await User.validate(request.all(), params.id);
 
       if (validation.fails()) {
         return response.status(422).send({
@@ -271,11 +258,8 @@ class UserController {
         'email',
         'first_name',
         'last_name',
-        // 'role_id'
       ]);
       // console.log(userData);
-
-      const userInstance = await User.findOrFail(params.id);
 
       const roles = await userInstance.roles().fetch();
       const rolesName = await roles.toJSON().map((role) => {
@@ -295,7 +279,6 @@ class UserController {
       userInstance.email = userData.email;
       userInstance.first_name = userData.first_name;
       userInstance.last_name = userData.last_name;
-      // userInstance.role_id = userData.role_id;
       
       await userInstance.save();
 

@@ -5,6 +5,7 @@ const Model = use('Model')
 
 /** @type {import('@adonisjs/framework/src/Hash')} */
 const Hash = use('Hash')
+const { validateAll } = use("Validator");
 
 class User extends Model {
 
@@ -46,18 +47,51 @@ class User extends Model {
   }
 
   /**
-   * [update_rules description]
-   * @param  {Boolean} strict [description]
-   * @return {[type]}         [description]
+   * [create_rules description]
+   * @return {[type]} [description]
    */
-  static get update_rules() {
+  static create_rules() {
     return {
       username: "required|string|unique:users,username",
       email: "required|email|unique:users,email",
       first_name: "required|string",
       last_name: "required|string",
-      // role_id: "required|range:1,4"
+      role_id: "required|range:1,4",
     };
+  }
+
+  /**
+   * [update_rules description]
+   * 
+   * userId = 0, ID equal to zero to not apply update rule by ID
+   *
+   * @param  {Number} userId [description]
+   * @return {[type]}        [description]
+   */
+  static update_rules(userId) {
+    return {
+      username: `required|string|unique:users,username,id,${userId}`,
+      email: `required|email|unique:users,email,id,${userId}`,
+      first_name: "required|string",
+      last_name: "required|string",
+    };
+  }
+
+  /**
+   * [validate description]
+   *
+   * userId = 0, ID equal to zero to not apply update rule by ID
+   *
+   * @param  {[type]} data [description]
+   * @param  {Number} id   [description]
+   * @return {[type]}      [description]
+   */
+  static validate(data, userId = 0) {
+    let rules = this.create_rules();
+    if (userId !== 0) {
+      rules = this.update_rules(userId)
+    }
+    return validateAll(data, rules);
   }
 
   /**
@@ -70,28 +104,6 @@ class User extends Model {
    */
   static scopeHasProfile(query) {
     return query.with('roles').with('permissions');
-  }
-
-  /**
-   * [rules description]
-   * @return {Object} [description]
-   */
-  static rules(userId = 0) {
-    // console.log(userId);
-    if (userId === 0) {
-      return {
-        username: "required|string|unique:users,username",
-        email: "required|email|unique:users,email",
-        first_name: "required|string",
-        last_name: "required|string",
-      };
-    }
-    return {
-      username: `required|string|unique:users,username,id,${userId}`,
-      email: `required|email|unique:users,email,id,${userId}`,
-      first_name: "required|string",
-      last_name: "required|string"
-    };
   }
 
   /**
