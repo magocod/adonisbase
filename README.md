@@ -1,4 +1,5 @@
 # Adonis API application
+[![Build Status](https://travis-ci.org/magocod/adonisbase.svg?branch=master)](https://travis-ci.org/magocod/adonisbase)
 
 This is the boilerplate for creating an API server in AdonisJs, it comes pre-configured with.
 
