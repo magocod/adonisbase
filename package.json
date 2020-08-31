@@ -40,7 +40,7 @@
     "sqlite3": "^5.0.0"
   },
   "devDependencies": {
-    "eslint": "^7.5.0"
+    "eslint": "^7.7.0"
   },
   "autoload": {
     "App": "./app"
