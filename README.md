@@ -32,3 +32,7 @@ Run all tests
 ```js
 adonis test
 ```
+
+### Schedule tasks
+
+* node -> https://github.com/kelektiv/node-cron
