@@ -18,3 +18,9 @@ interface LogData {
 ## cron jobs
 * repository: https://github.com/kelektiv/node-cron
 * config_cron: https://crontab.guru/
+
+## agenda
+* repository: https://github.com/agenda/agenda
+
+## bull
+* repository: https://github.com/OptimalBits/bull

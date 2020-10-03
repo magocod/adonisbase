@@ -22,6 +22,8 @@ async function summaryPublications(ioc, debug = false) {
 
 	// load dependencies
 	const User = ioc.use('App/Models/User')
+	const EmailNotification = ioc.use('App/Models/EmailNotification')
+
 	const Logger = ioc.use('Logger')
 
 	// console.log(ioc)
@@ -41,6 +43,12 @@ async function summaryPublications(ioc, debug = false) {
 	// }
 
 	// save results
+	await EmailNotification.create({
+		quantity_to_send: count,
+		amount_sent: 0,
+		status: 0,
+		error: ''
+	})
 
 	if (debug) {
 		console.log('end: summaryPublications')
