@@ -49,3 +49,6 @@ Route.resource('api/roles', 'auth/RoleController').apiOnly().middleware(
 Route.resource('api/permissions', 'auth/PermissionController').apiOnly().middleware(
   ['auth', "isin:root,admin"]
 );
+
+Route.post('api/csv', 'QueueController.csv')
+Route.post('api/db', 'QueueController.db')

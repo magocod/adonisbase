@@ -1,5 +1,7 @@
 'use strict'
 
+const path = require('path');
+
 /*
 |--------------------------------------------------------------------------
 | Providers
@@ -21,6 +23,7 @@ const providers = [
   '@adonisjs/framework/providers/ViewProvider',
   // third party
   'adonis-acl/providers/AclProvider',
+  path.join(__dirname, '..', 'providers', 'Queue/Provider')
 ]
 
 /*
