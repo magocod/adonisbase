@@ -1,5 +1,8 @@
 'use strict'
 
+const { ioc } = require("@adonisjs/fold");
+const summaryPublications = require('../../../schedule_tasks/tasks/summaryPublications')
+
 const Queue = use('Bee/Queue')
 const User = use('App/Models/User')
 
@@ -42,6 +45,8 @@ class QueueController {
 				const user = await User.query().where('id', job.data.user_id).first()
 			  console.log(`Processing job ${job.id}`);
 			  // console.log(user)
+			  const result = await summaryPublications(ioc, true)
+			  console.log(result)
 			  return user.toJSON()
 			});
 		}
