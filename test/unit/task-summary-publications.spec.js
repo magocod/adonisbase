@@ -9,7 +9,7 @@ const summaryPublications = require('../../schedule_tasks/tasks/summaryPublicati
 
 test('test task db connected', async ({ assert }) => {
 	const count = await User.getCount()
-
-	const result = await summaryPublications(ioc)
+	const result = await summaryPublications()
+	// console.log(result)
   assert.equal(result, count)
 })

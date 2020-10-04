@@ -1,3 +1,5 @@
+const { ioc } = require("@adonisjs/fold");
+
 /**
  * [summaryPublications description]
  *
@@ -15,7 +17,7 @@
  * }
  *
  */
-async function summaryPublications(ioc, debug = false) {
+async function summaryPublications(debug = false) {
 	if (debug) {
 		console.log('init: summaryPublications');
 	}
@@ -23,6 +25,9 @@ async function summaryPublications(ioc, debug = false) {
 	// load dependencies
 	const User = ioc.use('App/Models/User')
 	const EmailNotification = ioc.use('App/Models/EmailNotification')
+
+	// console.log(ioc)
+	// console.log(User)
 
 	const Logger = ioc.use('Logger')
 

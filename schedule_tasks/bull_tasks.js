@@ -1,12 +1,12 @@
 const Queue = require('bull');
-const { ioc } = require("@adonisjs/fold");
+// const { ioc } = require("@adonisjs/fold");
 
 const Env = use('Env');
 const Logger = use('Logger')
 
 const ACTIVATE_SCHEDULED_TASKS = JSON.parse(Env.get('ACTIVATE_SCHEDULED_TASKS'));
 // console.log(Env)
-console.log(ACTIVATE_SCHEDULED_TASKS)
+// console.log(ACTIVATE_SCHEDULED_TASKS)
 
 // avoid activating tasks in functional tests
 if (ACTIVATE_SCHEDULED_TASKS) {
@@ -20,7 +20,7 @@ if (ACTIVATE_SCHEDULED_TASKS) {
 	  // job.data contains the custom data passed when the job was created
 	  // job.id contains id of this job.
 	  // console.log(job)
-	  const result = await summaryPublications(ioc, true)
+	  const result = await summaryPublications(true)
 	  return result
 
 	})

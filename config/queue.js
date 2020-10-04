@@ -12,6 +12,8 @@ const sharedConfig = {
   }
 };
 
+const summaryPublications = require('../schedule_tasks/tasks/summaryPublications')
+
 module.exports = {
   /*
   |--------------------------------------------------------------------------
@@ -37,7 +39,7 @@ module.exports = {
    * @param  {Function} done [description]
    * @return {[type]}        [description]
    */
-  csv_process(job, done) {
+  async csv_process(job, done) {
     console.log(`Processing job ${job.id}`);
 
     console.log(job.data)
@@ -52,8 +54,10 @@ module.exports = {
         job.reportProgress({number: 1000, total: totalLines});
       }
     }
+    await summaryPublications(true)
 
-    return done(null, job.data.x + job.data.y);
+    // return done(null, job.data.x + job.data.y);
+    return job.data.x + job.data.y
   },
 
   /**

@@ -50,5 +50,5 @@ Route.resource('api/permissions', 'auth/PermissionController').apiOnly().middlew
   ['auth', "isin:root,admin"]
 );
 
-Route.post('api/csv', 'QueueController.csv')
-Route.post('api/db', 'QueueController.db')
+Route.get('api/csv', 'QueueController.csv')
+Route.get('api/db', 'QueueController.db')

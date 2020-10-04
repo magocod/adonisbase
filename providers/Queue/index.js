@@ -42,6 +42,7 @@ class Queue {
      */
     return this._queuesPool[name]
   }
+
 }
 
 module.exports = Queue

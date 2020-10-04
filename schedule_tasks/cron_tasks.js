@@ -1,5 +1,5 @@
 const CronJob = require('cron').CronJob;
-const { ioc } = require("@adonisjs/fold");
+// const { ioc } = require("@adonisjs/fold");
 
 const summaryPublications = require('./tasks/summaryPublications')
 
@@ -18,7 +18,7 @@ if (ACTIVATE_SCHEDULED_TASKS) {
 			try {
 				console.log('init: cron tasks')
 				// call function task
-				await summaryPublications(ioc, true)
+				await summaryPublications(true)
 				console.log('end: cron tasks')
 			} catch(error) {
 				console.log(error)
