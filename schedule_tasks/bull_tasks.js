@@ -33,7 +33,7 @@ if (ACTIVATE_SCHEDULED_TASKS) {
 
 } else {
 	Logger.info(
-		'summaryPublications_' + new Date().getTime(),
+		'schedule_tasks_' + new Date().getTime(),
 		{
 			report_message: 'scheduled tasks disabled on the server instance'
 		}

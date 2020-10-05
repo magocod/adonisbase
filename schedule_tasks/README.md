@@ -17,13 +17,16 @@ interface LogData {
 
 ## cron jobs
 * repository: https://github.com/kelektiv/node-cron
-* config_cron: https://crontab.guru/
+* db: None
 
 ## agenda
 * repository: https://github.com/agenda/agenda
+* db: mongo
 
 ## bull
 * repository: https://github.com/OptimalBits/bull
+* db: redis
 
 ## bee-queue
 * repository: https://github.com/bee-queue/bee-queue
+* db: redis
