@@ -24,3 +24,6 @@ interface LogData {
 
 ## bull
 * repository: https://github.com/OptimalBits/bull
+
+## bee-queue
+* repository: https://github.com/bee-queue/bee-queue
